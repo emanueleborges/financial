@@ -1,0 +1,20 @@
+---
+description: Contrato REST e regras de API v1
+globs: financial-hub/src/main/java/com/financialhub/interfaces/**/*.java
+alwaysApply: false
+---
+
+# API REST v1
+
+Contrato canônico: `specs/backend/api/rest-v1.md`  
+Erros/HTTP: `specs/backend/product/business-rules.md` (matriz)
+
+## Obrigatório
+
+- Base `/api/v1`
+- Envelope de erro: `code`, `message`, `timestamp`, `path`, `fields?`
+- Não expor `passwordHash`
+- Idempotência: body `idempotencyKey` **ou** header `Idempotency-Key`
+- Rotas públicas: `POST /users`, `POST /auth/login` (+ swagger/actuator health)
+
+Não criar endpoint novo sem atualizar `specs/backend/api/rest-v1.md` e o Postman.

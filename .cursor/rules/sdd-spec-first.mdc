@@ -1,0 +1,30 @@
+---
+description: SDD obrigatório — ler specs antes de qualquer mudança de código
+alwaysApply: true
+---
+
+# Spec-Driven Development (Financial Hub)
+
+Este projeto usa **SDD**. Specs em `specs/` são a fonte de verdade — não o improviso.
+
+## Antes de qualquer implementação
+
+1. Ler `specs/constitution.md`
+2. Identificar o lado: `specs/backend/` (API) e/ou `specs/frontend/` (Web)
+3. Se a mudança não estiver especificada → **atualizar a spec primeiro**, depois o código
+4. Nunca inventar endpoints, eventos, tabelas ou regras fora das specs
+
+## Durante o código
+
+- Backend: Clean Architecture; BR-* em `specs/backend/product/business-rules.md`
+- Frontend: telas/fluxos em `specs/frontend/overview.md`
+- Controllers sem regra de negócio
+- Saldo: procedure `transfer_balance` / não negativo
+- Kafka só para side-effects; PostgreSQL é ledger
+
+## Depois
+
+- Manter spec e código alinhados
+- Atualizar Postman/OpenAPI se API mudar
+
+Índice: `specs/README.md`

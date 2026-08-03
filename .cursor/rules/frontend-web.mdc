@@ -1,0 +1,19 @@
+---
+description: Spec e convenções do frontend Next.js
+globs: web/**/*.{ts,tsx,css}
+alwaysApply: false
+---
+
+# Frontend Web
+
+Spec canônica: `specs/frontend/overview.md`  
+Contrato da API: `specs/backend/api/rest-v1.md`
+
+## Obrigatório
+
+- Não inventar endpoints — se faltar API, atualizar `specs/backend/api/` primeiro
+- Erros `VALIDATION_ERROR.fields` no campo correspondente
+- Valores monetários no formato BR (`R$ 1.234,56`)
+- Rotas `/app/*` protegidas por JWT no client
+
+Mudanças de tela/fluxo → atualizar `specs/frontend/overview.md` antes do código.

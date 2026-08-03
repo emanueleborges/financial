@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: financial-hub-config
+data:
+  SPRING_PROFILES_ACTIVE: "docker"
+  DB_HOST: "postgres-service"
+  DB_PORT: "5432"
+  DB_NAME: "financialhub"
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka-service:9092"
+  AWS_REGION: "us-east-1"
+  S3_BUCKET: "financial-hub-receipts"
+  DAILY_LIMIT: "5000.00"
+  SERVER_PORT: "8080"

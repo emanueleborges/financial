@@ -1,0 +1,35 @@
+---
+description: Convenções Clean Architecture do financial-hub
+globs: financial-hub/src/main/java/**/*.java
+alwaysApply: false
+---
+
+# Arquitetura Java
+
+Seguir `specs/backend/architecture/overview.md`.
+
+## Camadas
+
+- `domain` — só modelos/enums/exceptions; sem Spring/JPA/Kafka
+- `application` — use cases e ports; orquestra domínio
+- `infrastructure` — adapters que implementam ports
+- `interfaces` — REST DTOs/controllers/filters
+
+## Exemplos
+
+```java
+// ❌ BAD — regra no controller
+@PostMapping
+public ResponseEntity<?> transfer(@RequestBody req) {
+  if (user.getBalance().compareTo(amount) < 0) return badRequest();
+}
+
+// ✅ GOOD — controller delega ao use case
+@PostMapping
+public ResponseEntity<TransactionResponse> transfer(@Valid @RequestBody TransferRequest req) {
+  return created(mapper.toResponse(transferUseCase.execute(...)));
+}
+```
+
+- Novas regras → `BR-XXX` em `specs/backend/product/business-rules.md` + teste
+- Novas tabelas → `specs/backend/data/schema.md` + Flyway novo
