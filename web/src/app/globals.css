@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Outfit:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #07131f;
+  --teal: #145a55;
+  --foam: #e8f1ef;
+  --amber: #e8a838;
+  --muted: #8aa3a0;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Outfit", sans-serif;
+}
+
+body {
+  color: var(--foam);
+  background: var(--ink);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--amber) 40%, transparent);
+}
