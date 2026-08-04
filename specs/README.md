@@ -8,7 +8,7 @@ Fonte de verdade do **Financial Hub**. Código deve refletir estas specs.
 specs/
 ├── constitution.md      # Compartilhado — princípios não negociáveis
 ├── workflow.md          # Compartilhado — ciclo SDD
-├── backend/             # API Spring Boot (financial-hub/)
+├── backend/             # API Spring Boot (backend/)
 │   ├── product/
 │   ├── api/
 │   ├── data/
@@ -25,7 +25,7 @@ specs/
 | Constituição | [`constitution.md`](constitution.md) |
 | Fluxo de trabalho | [`workflow.md`](workflow.md) |
 
-## Backend (`financial-hub/`)
+## Backend (`backend/`)
 
 | Spec | Caminho |
 |------|---------|

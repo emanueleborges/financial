@@ -2,7 +2,7 @@
 
 **Status:** active  
 **Origem:** `DESAFIO.MD`  
-**Código:** `financial-hub/`  
+**Código:** `backend/`  
 **UI:** ver `specs/frontend/overview.md` (`web/`)
 
 ## Visão
@@ -65,4 +65,4 @@ Backend de fintech que processa transferências P2P em tempo real, com consistê
 
 1. Duas transferências concorrentes não geram saldo negativo.
 2. Replay de mensagem Kafka não duplica side-effect (idempotência por `event_id` + consumer).
-3. Stack local sobe com `docker compose` em `financial-hub/docker`.
+3. Stack local sobe com `docker compose` em `backend/docker`.

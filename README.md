@@ -9,7 +9,7 @@ Specs em [`specs/`](specs/) são a fonte de verdade. Guia de agentes: [`AGENTS.m
 | Camada | Pasta | Specs |
 |--------|-------|--------|
 | Compartilhado | — | [`constitution.md`](specs/constitution.md), [`workflow.md`](specs/workflow.md) |
-| API Spring Boot | [`financial-hub/`](financial-hub/) | [`specs/backend/`](specs/backend/) |
+| API Spring Boot | [`backend/`](backend/) | [`specs/backend/`](specs/backend/) |
 | Web Next.js | [`web/`](web/) | [`specs/frontend/`](specs/frontend/) |
 
 Índice completo: [`specs/README.md`](specs/README.md)
@@ -18,7 +18,7 @@ Specs em [`specs/`](specs/) são a fonte de verdade. Guia de agentes: [`AGENTS.m
 
 ```bash
 # Backend
-cd financial-hub/docker && docker compose up --build -d
+cd backend/docker && docker compose up --build -d
 
 # Frontend
 cd web && npm install && npm run dev

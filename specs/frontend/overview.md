@@ -3,7 +3,7 @@
 **Status:** active  
 **Stack:** Next.js 15 (App Router) + TypeScript  
 **Código:** `web/`  
-**API:** `specs/backend/api/rest-v1.md` → código `financial-hub/`
+**API:** `specs/backend/api/rest-v1.md` → código `backend/`
 
 ## Objetivo
 
@@ -32,7 +32,7 @@ A UI **não** usa UUID de usuário.
 | Login | `/login` | público | JWT por **CPF/CNPJ** |
 | Home / saldo | `/app` | JWT | saldo do documento logado |
 | Transferir | `/app/transfer` | JWT | favoritos ou novo CPF/CNPJ; identificar recebedor antes de confirmar |
-| Transações / Extrato | `/app/transactions` | JWT | extrato com saldos + estorno + favoritar + PDF |
+| Transações / Extrato | `/app/transactions` | JWT | extrato com saldos + exportar PDF + estorno + favoritar + comprovante |
 
 ## Favoritos (client-side)
 

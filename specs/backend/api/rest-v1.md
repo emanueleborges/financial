@@ -88,6 +88,14 @@ Extrato de movimentações (mais recentes primeiro) com saldo após cada lançam
 - **403** se o JWT não for do próprio `{document}`
 - **404** usuário inexistente
 
+### GET `/users/{document}/transactions/export` — autenticado
+- Retorna **PDF** do extrato (`application/pdf`)
+- Colunas: Movimentação, Valor, Saldo, Quando
+- Inclui titular, CPF/CNPJ e saldo atual
+- Query opcional: `limit` (default 50, máx. 100)
+- **200** arquivo `extrato-{document}.pdf`
+- **403** se o JWT não for do próprio `{document}`
+
 ## Transactions
 
 ### POST `/transactions` — autenticado
@@ -167,4 +175,4 @@ UUID (`payerId`/`payeeId`) permanece interno na resposta, mas a UI deve privileg
 
 ## Fora do contrato v1
 
-Não adicionar endpoints sem atualizar esta spec e o Postman em `financial-hub/postman/`.
+Não adicionar endpoints sem atualizar esta spec e o Postman em `backend/postman/`.

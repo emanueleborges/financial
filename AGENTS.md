@@ -24,17 +24,17 @@ Você está no repositório **projeto-banco** (Financial Hub).
 | Camadas Java | `specs/backend/architecture/overview.md` |
 | Web Next.js | `specs/frontend/overview.md` |
 | Desafio original (histórico) | `DESAFIO.MD` |
-| Código API | `financial-hub/` |
+| Código API | `backend/` |
 | Código Web | `web/` |
 
 ## Comandos úteis
 
 ```bash
 # Backend — testes
-cd financial-hub && mvn test
+cd backend && mvn test
 
 # Backend — stack local
-cd financial-hub/docker && docker compose up --build -d
+cd backend/docker && docker compose up --build -d
 
 # Frontend
 cd web && npm install && npm run dev

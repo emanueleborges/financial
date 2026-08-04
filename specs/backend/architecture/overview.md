@@ -2,7 +2,7 @@
 
 ## Estilo
 
-Clean Architecture / Hexagonal no módulo `financial-hub`.
+Clean Architecture / Hexagonal no módulo `backend`.
 
 ```
 interfaces  ──▶  application  ──▶  domain
@@ -33,12 +33,12 @@ infrastructure ───────┘ (implementa ports)
 
 ## Infra obrigatória (local)
 
-Compose em `financial-hub/docker/`:
+Compose em `backend/docker/`:
 - app, postgres, redis, zookeeper, kafka, localstack
 
-K8s em `financial-hub/k8s/`: Deployment(3), Service, ConfigMap, Secret, HPA, Ingress.
+K8s em `backend/k8s/`: Deployment(3), Service, ConfigMap, Secret, HPA, Ingress.
 
-Terraform em `financial-hub/terraform/`: RDS, S3, IAM.
+Terraform em `backend/terraform/`: RDS, S3, IAM.
 
 ## Mudanças arquiteturais
 

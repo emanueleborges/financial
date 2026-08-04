@@ -1,6 +1,6 @@
 ---
 description: Contrato REST e regras de API v1
-globs: financial-hub/src/main/java/com/financialhub/interfaces/**/*.java
+globs: backend/src/main/java/com/financialhub/interfaces/**/*.java
 alwaysApply: false
 ---
 

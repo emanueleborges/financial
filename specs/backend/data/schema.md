@@ -1,7 +1,7 @@
 # Modelo de Dados
 
 **SGBD:** PostgreSQL 16  
-**Migrações:** Flyway em `financial-hub/src/main/resources/db/migration/`
+**Migrações:** Flyway em `backend/src/main/resources/db/migration/`
 
 ## Tabelas
 

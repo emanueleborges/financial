@@ -1,6 +1,6 @@
 ---
-description: Convenções Clean Architecture do financial-hub
-globs: financial-hub/src/main/java/**/*.java
+description: Convenções Clean Architecture do backend
+globs: backend/src/main/java/**/*.java
 alwaysApply: false
 ---
 
