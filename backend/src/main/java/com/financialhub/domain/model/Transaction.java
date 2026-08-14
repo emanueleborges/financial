@@ -40,8 +40,9 @@ public class Transaction {
             throw new InvalidTransactionException("Transação não pode ser completada no status: " + status);
         }
         this.status = TransactionStatus.COMPLETED;
-        this.updatedAt = Instant.now();
-        this.completedAt = Instant.now();
+        Instant completed = Instant.now();
+        this.updatedAt = completed;
+        this.completedAt = completed;
     }
 
     public void markFailed(String reason) {
@@ -60,5 +61,11 @@ public class Transaction {
 
     public boolean isReversible() {
         return status == TransactionStatus.COMPLETED && type == TransactionType.TRANSFER;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{id=" + id + ", status=" + status
+                + ", failureReason=" + failureReason + ", completedAt=" + completedAt + "}";
     }
 }

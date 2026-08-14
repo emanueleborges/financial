@@ -42,18 +42,20 @@ public class BalanceUpdateConsumer {
 
             balanceCache.evict(event.getPayerId());
             balanceCache.evict(event.getPayeeId());
-
-            try {
-                transactionRepository.findById(event.getTransactionId()).ifPresent(this::storeReceipt);
-                log.info("Saldo atualizado e cache invalidado para tx={}", event.getTransactionId());
-            } catch (Exception e) {
-                log.warn("Falha ao gerar comprovante: {}", e.getMessage());
-            }
-
+            storeReceiptSafely(event);
             idempotencyPort.markProcessed(event.getEventId(), event.getTransactionId(), CONSUMER_NAME);
         } catch (Exception ex) {
             log.error("Erro no BalanceUpdateConsumer: {}", ex.getMessage());
             kafkaTemplate.send("transaction.dlq", event.getTransactionId().toString(), event);
+        }
+    }
+
+    private void storeReceiptSafely(TransactionEvent event) {
+        try {
+            transactionRepository.findById(event.getTransactionId()).ifPresent(this::storeReceipt);
+            log.info("Saldo atualizado e cache invalidado para tx={}", event.getTransactionId());
+        } catch (Exception e) {
+            log.warn("Falha ao gerar comprovante: {}", e.getMessage());
         }
     }
 

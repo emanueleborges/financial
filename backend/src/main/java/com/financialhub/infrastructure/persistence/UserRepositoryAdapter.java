@@ -70,24 +70,32 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
                     .setParameter(3, amount)
                     .getSingleResult();
         } catch (PersistenceException ex) {
-            String msg = ex.getMessage() != null ? ex.getMessage() : "";
-            Throwable cause = ex.getCause();
-            while (cause != null) {
-                if (cause.getMessage() != null) {
-                    msg = cause.getMessage();
-                }
-                cause = cause.getCause();
-            }
-            if (msg.contains("INSUFFICIENT_BALANCE")) {
-                throw new InsufficientBalanceException("Saldo insuficiente para a transferência");
-            }
-            if (msg.contains("PAYER_INACTIVE") || msg.contains("PAYEE_INACTIVE")) {
-                throw new InactiveAccountException("Conta inativa ou bloqueada");
-            }
-            if (msg.contains("PAYER_NOT_FOUND") || msg.contains("PAYEE_NOT_FOUND")) {
-                throw new UserNotFoundException("usuário da transferência");
-            }
-            throw new DomainException("TRANSFER_FAILED", "Falha na transferência de saldo: " + msg);
+            rethrowTransferFailure(rootMessage(ex));
         }
+    }
+
+    private static String rootMessage(PersistenceException ex) {
+        String msg = ex.getMessage() != null ? ex.getMessage() : "";
+        Throwable cause = ex.getCause();
+        while (cause != null) {
+            if (cause.getMessage() != null) {
+                msg = cause.getMessage();
+            }
+            cause = cause.getCause();
+        }
+        return msg;
+    }
+
+    private static void rethrowTransferFailure(String msg) {
+        if (msg.contains("INSUFFICIENT_BALANCE")) {
+            throw new InsufficientBalanceException("Saldo insuficiente para a transferência");
+        }
+        if (msg.contains("PAYER_INACTIVE") || msg.contains("PAYEE_INACTIVE")) {
+            throw new InactiveAccountException("Conta inativa ou bloqueada");
+        }
+        if (msg.contains("PAYER_NOT_FOUND") || msg.contains("PAYEE_NOT_FOUND")) {
+            throw new UserNotFoundException("usuário da transferência");
+        }
+        throw new DomainException("TRANSFER_FAILED", "Falha na transferência de saldo: " + msg);
     }
 }

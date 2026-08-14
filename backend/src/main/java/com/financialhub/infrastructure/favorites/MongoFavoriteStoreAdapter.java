@@ -23,13 +23,15 @@ import java.util.List;
 public class MongoFavoriteStoreAdapter implements FavoriteStorePort {
 
     static final String COLLECTION = "favorites";
+    private static final String OWNER_DOCUMENT = "ownerDocument";
+    private static final String PAYEE_DOCUMENT = "payeeDocument";
 
     private final MongoTemplate mongoTemplate;
 
     @PostConstruct
     void indexes() {
         mongoTemplate.getCollection(COLLECTION).createIndex(
-                Indexes.compoundIndex(Indexes.ascending("ownerDocument"), Indexes.ascending("payeeDocument")),
+                Indexes.compoundIndex(Indexes.ascending(OWNER_DOCUMENT), Indexes.ascending(PAYEE_DOCUMENT)),
                 new IndexOptions().unique(true)
         );
     }
@@ -45,7 +47,7 @@ public class MongoFavoriteStoreAdapter implements FavoriteStorePort {
     @Override
     public List<FavoritePayee> add(String ownerDocument, FavoritePayee favorite) {
         Query existing = byOwner(ownerDocument)
-                .addCriteria(Criteria.where("payeeDocument").is(favorite.document()));
+                .addCriteria(Criteria.where(PAYEE_DOCUMENT).is(favorite.document()));
         mongoTemplate.remove(existing, COLLECTION);
         mongoTemplate.insert(FavoriteDocument.from(ownerDocument, favorite), COLLECTION);
         return list(ownerDocument).stream().limit(30).toList();
@@ -54,13 +56,13 @@ public class MongoFavoriteStoreAdapter implements FavoriteStorePort {
     @Override
     public List<FavoritePayee> remove(String ownerDocument, String payeeDocument) {
         Query query = byOwner(ownerDocument)
-                .addCriteria(Criteria.where("payeeDocument").is(payeeDocument));
+                .addCriteria(Criteria.where(PAYEE_DOCUMENT).is(payeeDocument));
         mongoTemplate.remove(query, COLLECTION);
         return list(ownerDocument);
     }
 
     private static Query byOwner(String ownerDocument) {
-        return new Query(Criteria.where("ownerDocument").is(ownerDocument));
+        return new Query(Criteria.where(OWNER_DOCUMENT).is(ownerDocument));
     }
 
     @Document(collection = COLLECTION)

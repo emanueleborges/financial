@@ -3,7 +3,6 @@ package com.financialhub.application.port.in;
 import com.financialhub.domain.model.User;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public interface CreateUserUseCase {
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,7 +48,7 @@ public class DailyReportConsumer {
 
     @Scheduled(cron = "0 0 0 * * *")
     public void finalizeDailyReport() {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate yesterday = LocalDate.now(ZoneId.of("America/Sao_Paulo")).minusDays(1);
         ReportSnapshot snapshot = new ReportSnapshot(dailyCount.get(), dailyVolume.get());
         history.put(yesterday, snapshot);
 

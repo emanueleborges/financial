@@ -11,19 +11,19 @@ export function formatBRLInput(value: number | null | undefined): string {
 }
 
 export function parseBRLInput(raw: string): number | null {
-  const cleaned = raw.replace(/[^\d.,]/g, '').trim();
+  const cleaned = raw.replaceAll(/[^\d.,]/g, '').trim();
   if (!cleaned) return null;
   const hasComma = cleaned.includes(',');
   const hasDot = cleaned.includes('.');
   let normalized = cleaned;
   if (hasComma && hasDot) {
-    normalized = cleaned.replace(/\./g, '').replace(',', '.');
+    normalized = cleaned.replaceAll('.', '').replaceAll(',', '.');
   } else if (hasComma) {
-    normalized = cleaned.replace(',', '.');
+    normalized = cleaned.replaceAll(',', '.');
   } else if (hasDot) {
     const parts = cleaned.split('.');
     if (!(parts.length === 2 && parts[1].length <= 2)) {
-      normalized = cleaned.replace(/\./g, '');
+      normalized = cleaned.replaceAll('.', '');
     }
   }
   const value = Number(normalized);
@@ -31,7 +31,7 @@ export function parseBRLInput(raw: string): number | null {
 }
 
 export function maskBRLFromDigits(raw: string): string {
-  const digits = raw.replace(/\D/g, '');
+  const digits = raw.replaceAll(/\D/g, '');
   if (!digits) return '';
   return formatBRLInput(Number(digits) / 100);
 }
@@ -57,7 +57,7 @@ export function formatDateTimeShort(value: string | null | undefined): string {
 }
 
 export function onlyDigits(value: string) {
-  return value.replace(/\D/g, '');
+  return value.replaceAll(/\D/g, '');
 }
 
 export function isValidDocumentLength(digits: string) {

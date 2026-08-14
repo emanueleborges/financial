@@ -44,7 +44,7 @@ export class AuthService {
     const token = localStorage.getItem(ACCESS_KEY);
     if (!token) return null;
     try {
-      const json = atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'));
+      const json = atob(token.split('.')[1].replaceAll('-', '+').replaceAll('_', '/'));
       const payload = JSON.parse(json) as { sub?: string; userId?: string; email?: string; exp?: number };
       if (!payload.sub) return null;
       if (payload.exp && payload.exp * 1000 < Date.now()) {

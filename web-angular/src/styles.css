@@ -151,16 +151,16 @@ select {
 
 .alert {
   border-radius: 0.5rem;
-  border: 1px solid color-mix(in srgb, #f87171 30%, transparent);
-  background: rgba(239, 68, 68, 0.1);
-  color: #fee2e2;
+  border: 1px solid #f87171;
+  background: #4a1515;
+  color: #ffe4e6;
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
   margin-bottom: 1rem;
 }
 
 .field-error {
-  color: #fca5a5;
+  color: #fecaca;
   font-size: 0.75rem;
   margin-top: 0.35rem;
 }

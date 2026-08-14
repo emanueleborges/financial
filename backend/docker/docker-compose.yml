@@ -267,7 +267,7 @@ services:
 
   sonarqube:
     profiles: ["sonar"]
-    image: sonarqube:25-community
+    image: sonarqube:community
     container_name: fh-sonarqube
     ports:
       - "9000:9000"

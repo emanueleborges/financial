@@ -15,13 +15,15 @@ Os dashboards são **independentes**. O mesmo `sonar-project.properties` aliment
 
 - `backend/src/main/java` + JaCoCo (`backend/target/site/jacoco/jacoco.xml`)
 - `services/notification-service/src/main/java` + JaCoCo
-- `web-angular/src` (TypeScript; sem cobertura obrigatória neste repo)
+- `web-angular/src` (TypeScript; **fora da métrica de cobertura**; spec não exige testes de cobertura no Angular)
+
+Meta de cobertura (JaCoCo / Quality Gate local): **≥ 60%** nas linhas Java da API e do notification-service.
 
 ## Local
 
 ```bash
 cd backend/docker
-docker compose --profile sonar up -d
+docker compose --profile sonar up -d   # imagem sonarqube:community
 # aguardar UP em http://localhost:9000 (primeiro boot: 1–3 min)
 # login inicial: admin / admin — trocar senha e gerar um token
 
