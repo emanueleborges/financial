@@ -1,0 +1,17 @@
+---
+description: Spec e convenções do frontend Angular
+globs: web-angular/**/*.{ts,html,css}
+alwaysApply: false
+---
+
+# Frontend Angular
+
+Spec canônica: `specs/frontend/angular.md`  
+Telas: `specs/frontend/overview.md`  
+Contrato da API: `specs/backend/api/rest-v1.md`
+
+- Não inventar endpoints
+- Erros `VALIDATION_ERROR.fields` no campo correspondente
+- Valores monetários no formato BR
+- Rotas `/app/*` protegidas por JWT (`authGuard`)
+- Inbox de notificações é opcional (falha não bloqueia saldo)

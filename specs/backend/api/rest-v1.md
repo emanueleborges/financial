@@ -88,6 +88,33 @@ Extrato de movimentações (mais recentes primeiro) com saldo após cada lançam
 - **403** se o JWT não for do próprio `{document}`
 - **404** usuário inexistente
 
+### GET `/users/{document}/favorites` — autenticado
+Lista favoritos do documento (Mongo; fallback in-memory em testes).
+
+```json
+{
+  "document": "52998224725",
+  "favorites": [
+    { "document": "39053344705", "name": "Bob Santos", "savedAt": "2026-08-14T18:00:00Z" }
+  ]
+}
+```
+
+- **403** se o JWT não for do próprio `{document}`
+
+### POST `/users/{document}/favorites` — autenticado
+```json
+{ "document": "39053344705", "name": "Bob Santos" }
+```
+- **200** lista atualizada
+- **404** recebedor inexistente
+- **422** favoritar o próprio documento
+- **403** se o JWT não for do próprio `{document}`
+
+### DELETE `/users/{document}/favorites/{payeeDocument}` — autenticado
+- **200** lista atualizada
+- **403** se o JWT não for do próprio `{document}`
+
 ### GET `/users/{document}/transactions/export` — autenticado
 - Retorna **PDF** do extrato (`application/pdf`)
 - Colunas: Movimentação, Valor, Saldo, Quando

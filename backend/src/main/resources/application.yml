@@ -90,7 +90,7 @@ management:
 
 app:
   cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:4200}
   jwt:
     secret: ${JWT_SECRET:financial-hub-secret-key-must-be-at-least-256-bits-long-for-hs256}
     expiration-ms: ${JWT_EXPIRATION:3600000}
@@ -115,6 +115,14 @@ app:
       transaction-completed: transaction.completed
       transaction-failed: transaction.failed
       dlq: transaction.dlq
+  consumers:
+    notification:
+      enabled: ${NOTIFICATION_CONSUMER_ENABLED:true}
+  favorites:
+    store: ${FAVORITES_STORE:memory}
+  mongodb:
+    uri: ${MONGODB_URI:mongodb://localhost:27017}
+    database: ${MONGODB_DATABASE:financialhub}
 
 resilience4j:
   circuitbreaker:

@@ -10,5 +10,7 @@ Especificações da API **financial-hub** (Spring Boot).
 | Dados | [`data/schema.md`](data/schema.md) |
 | Kafka | [`events/kafka.md`](events/kafka.md) |
 | Arquitetura | [`architecture/overview.md`](architecture/overview.md) |
+| Oracle | [`data/oracle.md`](data/oracle.md) |
+| notification-service | [`services/notification.md`](services/notification.md) |
 
 UI: [`../frontend/overview.md`](../frontend/overview.md)

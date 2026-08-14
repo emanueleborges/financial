@@ -1,7 +1,9 @@
 package com.financialhub.infrastructure.kafka.producer;
 
 import com.financialhub.application.port.out.TransactionEventPublisherPort;
+import com.financialhub.application.port.out.UserRepositoryPort;
 import com.financialhub.domain.model.Transaction;
+import com.financialhub.domain.model.User;
 import com.financialhub.infrastructure.kafka.dto.TransactionEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import java.util.UUID;
 public class KafkaTransactionEventPublisher implements TransactionEventPublisherPort {
 
     private final KafkaTemplate<String, TransactionEvent> kafkaTemplate;
+    private final UserRepositoryPort userRepository;
 
     @Value("${app.kafka.topics.transaction-created}")
     private String createdTopic;
@@ -44,12 +47,21 @@ public class KafkaTransactionEventPublisher implements TransactionEventPublisher
     }
 
     private void publish(String topic, String eventType, Transaction tx, String reason) {
+        User payer = userRepository.findById(tx.getPayerId()).orElse(null);
+        User payee = userRepository.findById(tx.getPayeeId()).orElse(null);
+
         TransactionEvent event = TransactionEvent.builder()
                 .eventId(UUID.randomUUID().toString())
                 .eventType(eventType)
                 .transactionId(tx.getId())
                 .payerId(tx.getPayerId())
                 .payeeId(tx.getPayeeId())
+                .payerDocument(payer != null ? payer.getDocument() : null)
+                .payeeDocument(payee != null ? payee.getDocument() : null)
+                .payerEmail(payer != null ? payer.getEmail() : null)
+                .payeeEmail(payee != null ? payee.getEmail() : null)
+                .payerName(payer != null ? payer.getName() : null)
+                .payeeName(payee != null ? payee.getName() : null)
                 .amount(tx.getAmount())
                 .status(tx.getStatus())
                 .type(tx.getType())

@@ -1,9 +1,8 @@
 # Specs Frontend
 
-Especificações da UI **web** (Next.js).
-
 | Spec | Arquivo |
 |------|---------|
-| Overview / telas / UX | [`overview.md`](overview.md) |
+| Overview / telas (Angular + Next.js) | [`overview.md`](overview.md) |
+| Angular (UI da vaga) | [`angular.md`](angular.md) |
 
-API consumida: [`../backend/api/rest-v1.md`](../backend/api/rest-v1.md)
+API: [`../backend/api/rest-v1.md`](../backend/api/rest-v1.md)

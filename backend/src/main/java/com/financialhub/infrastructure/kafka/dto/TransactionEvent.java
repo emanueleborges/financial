@@ -22,6 +22,12 @@ public class TransactionEvent {
     private UUID transactionId;
     private UUID payerId;
     private UUID payeeId;
+    private String payerDocument;
+    private String payeeDocument;
+    private String payerEmail;
+    private String payeeEmail;
+    private String payerName;
+    private String payeeName;
     private BigDecimal amount;
     private TransactionStatus status;
     private TransactionType type;

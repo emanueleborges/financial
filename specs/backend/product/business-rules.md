@@ -69,6 +69,13 @@ COMPLETED → REVERSED (via estorno)
 ## BR-014 — Estorno autorizado ao pagador
 - Somente o documento autenticado igual ao `payer` da TX original pode estornar
 
+## BR-015 — Favoritos
+- Só o próprio documento autenticado lista/grava/remove favoritos
+- Não é permitido favoritar o próprio CPF/CNPJ (`INVALID_TRANSACTION`)
+- Recebedor deve existir (`USER_NOT_FOUND`)
+- Persistência: Mongo (`favorites`); testes usam store in-memory
+- Não altera saldo
+
 ## Matriz de status HTTP
 
 | Código domínio | HTTP |

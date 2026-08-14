@@ -9,14 +9,14 @@ Plataforma de pagamentos instantâneos P2P (estilo Pix) com:
 - rastreabilidade total de eventos;
 - suporte a alta concorrência;
 - APIs REST versionadas;
-- interface web Next.js para o cliente final.
+- interface web Angular (UI da vaga) e Next.js (alternativa) para o cliente final.
 
 ## 2. Princípios imutáveis
 
 1. **Spec-first**: nenhuma feature nova sem atualizar `specs/` antes do código.
 2. **Saldo nunca negativo**: enforce em domínio + constraint SQL + lock pessimista.
-3. **PostgreSQL é a fonte da verdade** do saldo; Redis é cache-aside (TTL ≤ 5 min).
-4. **Transferência síncrona no banco**; Kafka só para side-effects (notificação, comprovante, relatório).
+3. **PostgreSQL é a fonte da verdade** do saldo; Redis é cache-aside (TTL ≤ 5 min). Oracle e Mongo **não** guardam saldo.
+4. **Transferência síncrona no banco**; Kafka só para side-effects (notificação em serviço separado, comprovante, relatório).
 5. **Clean/Hexagonal Architecture** no backend: `domain` e `application` não dependem de frameworks de infra.
 6. **Idempotência obrigatória** em transferências (`Idempotency-Key` ou `idempotency_key`).
 7. **Segurança**: senhas com BCrypt; APIs protegidas por JWT (exceto criar usuário e login).
@@ -28,9 +28,10 @@ Plataforma de pagamentos instantâneos P2P (estilo Pix) com:
 | Dentro do escopo | Fora do escopo (não inventar) |
 |------------------|-------------------------------|
 | Users, transferências, estorno | Open banking, cartões, boletos |
-| Frontend Next.js (`web/`) conforme `specs/frontend/` | Features de UI sem spec |
+| Frontend Angular (`web-angular/`) e Next.js (`web/`) conforme `specs/frontend/` | Features de UI sem spec |
 | Kafka events definidos em `specs/backend/events/` | Novos brokers sem atualizar a spec |
-| S3 para comprovantes PDF | Outros storage sem decisão em ADR |
+| S3 para comprovantes PDF (LocalStack local / AWS via Terraform) | Outros storage sem decisão em ADR |
+| notification-service (Oracle) + favoritos (Mongo) | Ledger de saldo fora do PostgreSQL |
 | Limite diário configurável | Limites por produto/moeda sem spec |
 | Multi-tenancy (só se spec existir) | Features “especialista” sem requisito |
 
@@ -48,7 +49,7 @@ Dependências apontam **para dentro** (domínio no centro). Detalhes: `specs/bac
 ## 5. Critérios de aceite globais
 
 - Endpoints de `specs/backend/api/rest-v1.md` cobertos e documentados (OpenAPI).
-- UI alinhada a `specs/frontend/overview.md`.
+- UI alinhada a `specs/frontend/` (Angular canônico + Next.js).
 - Migrações Flyway versionadas; sem `ddl-auto=update` em produção.
 - Testes unitários das regras de domínio e use cases críticos.
 - Docker Compose sobe o stack local documentado no README.

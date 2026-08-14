@@ -5,9 +5,12 @@ import com.financialhub.application.port.in.ExportStatementPdfUseCase;
 import com.financialhub.application.port.in.GetBalanceUseCase;
 import com.financialhub.application.port.in.GetUserUseCase;
 import com.financialhub.application.port.in.ListUserTransactionsUseCase;
+import com.financialhub.application.port.in.ManageFavoritesUseCase;
 import com.financialhub.infrastructure.security.AuthenticatedUser;
 import com.financialhub.interfaces.rest.dto.BalanceResponse;
 import com.financialhub.interfaces.rest.dto.CreateUserRequest;
+import com.financialhub.interfaces.rest.dto.FavoriteRequest;
+import com.financialhub.interfaces.rest.dto.FavoritesResponse;
 import com.financialhub.interfaces.rest.dto.StatementResponse;
 import com.financialhub.interfaces.rest.dto.UserResponse;
 import com.financialhub.interfaces.rest.mapper.RestMapper;
@@ -34,6 +37,7 @@ public class UserController {
     private final GetBalanceUseCase getBalanceUseCase;
     private final ListUserTransactionsUseCase listUserTransactionsUseCase;
     private final ExportStatementPdfUseCase exportStatementPdfUseCase;
+    private final ManageFavoritesUseCase manageFavoritesUseCase;
     private final RestMapper mapper;
 
     @PostMapping
@@ -77,6 +81,44 @@ public class UserController {
                 new ListUserTransactionsUseCase.ListCommand(document, auth.document(), limit)
         );
         return ResponseEntity.ok(mapper.toStatementResponse(statement));
+    }
+
+    @GetMapping("/{document}/favorites")
+    @Operation(summary = "Listar favoritos do documento")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<FavoritesResponse> listFavorites(
+            @PathVariable String document,
+            Authentication authentication) {
+        AuthenticatedUser auth = (AuthenticatedUser) authentication.getPrincipal();
+        var favorites = manageFavoritesUseCase.list(
+                new ManageFavoritesUseCase.Command(document, auth.document()));
+        return ResponseEntity.ok(mapper.toFavoritesResponse(document, favorites));
+    }
+
+    @PostMapping("/{document}/favorites")
+    @Operation(summary = "Adicionar recebedor favorito")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<FavoritesResponse> addFavorite(
+            @PathVariable String document,
+            @Valid @RequestBody FavoriteRequest request,
+            Authentication authentication) {
+        AuthenticatedUser auth = (AuthenticatedUser) authentication.getPrincipal();
+        var favorites = manageFavoritesUseCase.add(new ManageFavoritesUseCase.AddCommand(
+                document, auth.document(), request.document(), request.name()));
+        return ResponseEntity.ok(mapper.toFavoritesResponse(document, favorites));
+    }
+
+    @DeleteMapping("/{document}/favorites/{payeeDocument}")
+    @Operation(summary = "Remover recebedor favorito")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<FavoritesResponse> removeFavorite(
+            @PathVariable String document,
+            @PathVariable String payeeDocument,
+            Authentication authentication) {
+        AuthenticatedUser auth = (AuthenticatedUser) authentication.getPrincipal();
+        var favorites = manageFavoritesUseCase.remove(new ManageFavoritesUseCase.RemoveCommand(
+                document, auth.document(), payeeDocument));
+        return ResponseEntity.ok(mapper.toFavoritesResponse(document, favorites));
     }
 
     @GetMapping(value = "/{document}/transactions/export", produces = MediaType.APPLICATION_PDF_VALUE)

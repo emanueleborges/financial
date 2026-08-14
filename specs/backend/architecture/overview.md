@@ -2,12 +2,18 @@
 
 ## Estilo
 
-Clean Architecture / Hexagonal no módulo `backend`.
+Clean Architecture / Hexagonal no módulo `backend`. O `notification-service` é um segundo deployable (mesmo estilo, bounded context de notificação).
 
 ```
 interfaces  ──▶  application  ──▶  domain
                       ▲
-infrastructure ───────┘ (implementa ports)
+    infrastructure ───────┘ (implementa ports)
+```
+
+```
+financial-hub (8080)  --Kafka-->  notification-service (8081)
+       | PostgreSQL + Redis + Mongo                          | Oracle
+       | S3 (LocalStack)
 ```
 
 ## Pacotes
@@ -30,15 +36,18 @@ infrastructure ───────┘ (implementa ports)
 | ADR-003 | Cache-aside Redis | Performance de leitura; eviction em write |
 | ADR-004 | JWT stateless | Escala horizontal sem sticky session |
 | ADR-005 | LocalStack S3 no compose | Dev sem conta AWS |
+| ADR-006 | notification-service separado | Microsserviço real; group `notification-group` |
+| ADR-007 | Mongo só para favoritos | NoSQL sem tocar no ledger |
+| ADR-008 | Oracle só no inbox | Atende “PostgreSQL e Oracle” sem mover o saldo |
 
 ## Infra obrigatória (local)
 
 Compose em `backend/docker/`:
-- app, postgres, redis, zookeeper, kafka, localstack
+- app, notification, postgres, oracle, mongo, redis, zookeeper, kafka, localstack, daily-report, angular, prometheus, grafana, zipkin
 
-K8s em `backend/k8s/`: Deployment(3), Service, ConfigMap, Secret, HPA, Ingress.
+K8s: `backend/k8s/` + Helm `infra/k8s/helm/financial-hub/` (Deployment, Service, probes Actuator).
 
-Terraform em `backend/terraform/`: RDS, S3, IAM.
+Terraform: `backend/terraform/` (AWS real, opcional) e `infra/terraform/localstack/` (S3 + IAM local).
 
 ## Mudanças arquiteturais
 

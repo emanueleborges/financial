@@ -1,0 +1,24 @@
+replicaCount: 3
+image:
+  repository: financial-hub
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+service:
+  port: 80
+  targetPort: 8080
+probes:
+  liveness: /actuator/health/liveness
+  readiness: /actuator/health/readiness
+  startup: /actuator/health
+notification:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: notification-service
+    tag: "1.0.0"
+  service:
+    port: 80
+    targetPort: 8081
+env:
+  SPRING_PROFILES_ACTIVE: docker
+  CORS_ALLOWED_ORIGINS: http://localhost:4200,http://localhost:3000

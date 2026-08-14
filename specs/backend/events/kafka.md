@@ -18,6 +18,12 @@
   "transactionId": "uuid",
   "payerId": "uuid",
   "payeeId": "uuid",
+  "payerDocument": "52998224725",
+  "payeeDocument": "39053344705",
+  "payerEmail": "alice@email.com",
+  "payeeEmail": "bob@email.com",
+  "payerName": "Alice Silva",
+  "payeeName": "Bob Santos",
   "amount": 150.00,
   "status": "COMPLETED",
   "type": "TRANSFER",
@@ -26,17 +32,20 @@
 }
 ```
 
+Campos de documento/e-mail/nome permitem o `notification-service` operar **sem** acessar o PostgreSQL.
+
 ## Particionamento
 
 - **Key:** `transactionId` (ordem garantida por transação)
 
 ## Consumidores
 
-| Consumer | Group | Ação | Idempotência |
-|----------|-------|------|--------------|
-| BalanceUpdateConsumer | balance-update-group | Evict Redis; (comprovante) | `processed_events` |
-| NotificationConsumer | notification-group | E-mail mock payer/payee | `processed_events` |
-| DailyReportConsumer | daily-report-group | Agrega count/volume | `processed_events` |
+| Consumer | Onde | Group | Ação | Idempotência |
+|----------|------|-------|------|--------------|
+| BalanceUpdateConsumer | `financial-hub` | balance-update-group | Evict Redis | `processed_events` (Postgres) |
+| NotificationConsumer | `notification-service` (docker) ou embutido se `app.consumers.notification.enabled=true` | notification-group | Inbox Oracle + e-mail mock | unique `(event_id, email)` no Oracle / `processed_events` no embutido |
+| DailyReportConsumer | `financial-hub` + job Python | daily-report-group / `python-daily-report` | Agrega count/volume | `processed_events` / arquivo JSONL |
+| Daily report Python | `jobs/daily-report` | `python-daily-report` | Grava JSONL e envia ao S3 LocalStack | offset Kafka |
 
 ## Contratos de falha
 

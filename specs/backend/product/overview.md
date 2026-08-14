@@ -3,7 +3,7 @@
 **Status:** active  
 **Origem:** `DESAFIO.MD`  
 **Código:** `backend/`  
-**UI:** ver `specs/frontend/overview.md` (`web/`)
+**UI:** ver `specs/frontend/overview.md` — Angular (`web-angular/`) e Next.js (`web/`)
 
 ## Visão
 
@@ -44,14 +44,22 @@ Backend de fintech que processa transferências P2P em tempo real, com consistê
 
 ### C5 — Side-effects assíncronos
 - Invalidar cache de saldo
-- Notificação e-mail (mock)
-- Relatório diário agregado
+- Notificação e-mail (mock) no **notification-service** (Oracle)
+- Relatório diário agregado (consumer Java + job Python)
 - Comprovante PDF no S3
 - DLQ para falhas de consumo
 
 ### C6 — Contrato com o frontend
-- A UI Next.js consome esta API; detalhes de telas em `specs/frontend/overview.md`
+- Angular e Next.js consomem esta API; detalhes em `specs/frontend/`
 - Mudanças de contrato REST devem atualizar `specs/backend/api/rest-v1.md` e a spec frontend quando afetarem a UX
+
+### C7 — Favoritos (Mongo)
+- CRUD de recebedores favoritos por documento
+- Não faz parte do ledger
+
+### C8 — notification-service
+- Bounded context separado; Kafka in, Oracle out, REST inbox
+- Spec: `specs/backend/services/notification.md`
 
 ## Fora de escopo (v1)
 

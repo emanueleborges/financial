@@ -1,0 +1,12 @@
+.DS_Store
+.idea/
+*.iml
+node_modules/
+dist/
+.angular/
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+.env
+target/

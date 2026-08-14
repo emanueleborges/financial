@@ -1,0 +1,6 @@
+apiVersion: v2
+name: financial-hub
+description: Financial Hub API + notification-service
+type: application
+version: 1.0.0
+appVersion: "1.0.0"

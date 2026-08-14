@@ -132,6 +132,31 @@
             ],
             "url": "{{baseUrl}}/api/v1/users/{{document1}}/transactions/export?limit=50"
           }
+        },
+        {
+          "name": "Listar Favoritos",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{baseUrl}}/api/v1/users/{{document1}}/favorites"
+          }
+        },
+        {
+          "name": "Adicionar Favorito",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document\": \"{{document2}}\",\n  \"name\": \"Bob Santos\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/users/{{document1}}/favorites"
+          }
         }
       ]
     },

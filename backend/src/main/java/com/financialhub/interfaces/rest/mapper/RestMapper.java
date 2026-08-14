@@ -4,7 +4,10 @@ import com.financialhub.application.port.in.ListUserTransactionsUseCase;
 import com.financialhub.application.port.out.UserRepositoryPort;
 import com.financialhub.domain.model.Transaction;
 import com.financialhub.domain.model.User;
+import com.financialhub.domain.model.FavoritePayee;
 import com.financialhub.interfaces.rest.dto.BalanceResponse;
+import com.financialhub.interfaces.rest.dto.FavoriteItemResponse;
+import com.financialhub.interfaces.rest.dto.FavoritesResponse;
 import com.financialhub.interfaces.rest.dto.StatementEntryResponse;
 import com.financialhub.interfaces.rest.dto.StatementResponse;
 import com.financialhub.interfaces.rest.dto.TransactionResponse;
@@ -69,5 +72,15 @@ public class RestMapper {
 
     public BalanceResponse toBalanceResponse(String document, java.math.BigDecimal balance, Long version) {
         return new BalanceResponse(document, balance, version);
+    }
+
+    public FavoritesResponse toFavoritesResponse(String document, java.util.List<FavoritePayee> favorites) {
+        String digits = document == null ? "" : document.replaceAll("\\D", "");
+        return new FavoritesResponse(
+                digits,
+                favorites.stream()
+                        .map(item -> new FavoriteItemResponse(item.document(), item.name(), item.savedAt()))
+                        .toList()
+        );
     }
 }

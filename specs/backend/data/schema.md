@@ -46,7 +46,22 @@
 | created_at | TIMESTAMPTZ |
 
 ### processed_events
-Idempotência de consumidores Kafka: unique `(event_id, consumer_name)`.
+Idempotência de consumidores Kafka **do financial-hub**: unique `(event_id, consumer_name)`.
+
+## MongoDB — collection `favorites`
+
+Não é ledger. Usado só para BR-015.
+
+| Campo | Tipo |
+|-------|------|
+| ownerDocument | string (CPF/CNPJ) |
+| payeeDocument | string |
+| name | string |
+| savedAt | ISODate |
+
+Unique: `(ownerDocument, payeeDocument)`.
+
+Oracle do inbox: [`oracle.md`](oracle.md).
 
 ## Procedure obrigatória
 

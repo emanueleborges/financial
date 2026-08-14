@@ -64,7 +64,7 @@ services:
     ports:
       - "4566:4566"
     environment:
-      SERVICES: s3
+      SERVICES: s3,iam,sts
       DEFAULT_REGION: us-east-1
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
@@ -86,7 +86,7 @@ services:
         condition: service_healthy
       localstack:
         condition: service_started
-      zipkin:
+      mongo:
         condition: service_started
     ports:
       - "8080:8080"
@@ -104,9 +104,13 @@ services:
       AWS_SECRET_ACCESS_KEY: test
       S3_BUCKET: financial-hub-receipts
       JWT_SECRET: financial-hub-secret-key-must-be-at-least-256-bits-long-for-hs256
-      CORS_ALLOWED_ORIGINS: http://localhost:3000
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:4200
       ZIPKIN_ENDPOINT: http://zipkin:9411/api/v2/spans
-      TRACING_SAMPLE_PROBABILITY: "1.0"
+      TRACING_SAMPLE_PROBABILITY: ${TRACING_SAMPLE_PROBABILITY:-0.0}
+      NOTIFICATION_CONSUMER_ENABLED: ${NOTIFICATION_CONSUMER_ENABLED:-true}
+      FAVORITES_STORE: mongo
+      MONGODB_URI: mongodb://mongo:27017
+      MONGODB_DATABASE: financialhub
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 30s
@@ -115,6 +119,7 @@ services:
       start_period: 90s
 
   prometheus:
+    profiles: ["obs"]
     image: prom/prometheus:v2.54.1
     container_name: fh-prometheus
     depends_on:
@@ -136,6 +141,7 @@ services:
       retries: 5
 
   grafana:
+    profiles: ["obs"]
     image: grafana/grafana:11.2.0
     container_name: fh-grafana
     depends_on:
@@ -153,6 +159,7 @@ services:
       - grafana_data:/var/lib/grafana
 
   zipkin:
+    profiles: ["obs"]
     image: openzipkin/zipkin:3.4
     container_name: fh-zipkin
     ports:
@@ -166,8 +173,102 @@ services:
       retries: 10
       start_period: 30s
 
+  mongo:
+    image: mongo:7
+    container_name: fh-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  oracle:
+    profiles: ["oracle"]
+    image: gvenzl/oracle-free:23.5-slim-faststart
+    container_name: fh-oracle
+    environment:
+      ORACLE_PASSWORD: financial123
+      APP_USER: notif
+      APP_USER_PASSWORD: notif123
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 120s
+
+  notification:
+    profiles: ["oracle"]
+    build:
+      context: ../../services/notification-service
+      dockerfile: Dockerfile
+    container_name: fh-notification
+    depends_on:
+      oracle:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      ORACLE_HOST: oracle
+      ORACLE_PORT: 1521
+      ORACLE_SERVICE: FREEPDB1
+      ORACLE_USER: notif
+      ORACLE_PASSWORD: notif123
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      JWT_SECRET: financial-hub-secret-key-must-be-at-least-256-bits-long-for-hs256
+      CORS_ALLOWED_ORIGINS: http://localhost:4200,http://localhost:3000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 8
+      start_period: 90s
+
+  angular:
+    profiles: ["ui"]
+    build:
+      context: ../../web-angular
+      dockerfile: Dockerfile
+    container_name: fh-angular
+    ports:
+      - "4200:80"
+    depends_on:
+      app:
+        condition: service_healthy
+
+  daily-report:
+    profiles: ["jobs"]
+    build:
+      context: ../../jobs/daily-report
+      dockerfile: Dockerfile
+    container_name: fh-daily-report
+    depends_on:
+      kafka:
+        condition: service_healthy
+      localstack:
+        condition: service_started
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      AWS_ENDPOINT: http://localstack:4566
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      S3_BUCKET: financial-hub-receipts
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   localstack_data:
   prometheus_data:
   grafana_data:
+  mongo_data:
+  oracle_data:
