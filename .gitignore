@@ -9,4 +9,7 @@ dist/
 *.tfstate.*
 crash.log
 .env
+.sonar/
+.scannerwork/
+.sonar-local-token
 target/

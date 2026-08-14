@@ -51,6 +51,7 @@ specs/
 | Spec | Caminho |
 |------|---------|
 | CI/CD GitHub Actions | [`infra/cicd.md`](infra/cicd.md) |
+| SonarQube / SonarCloud | [`infra/sonar.md`](infra/sonar.md) |
 | Kubernetes / Helm | [`infra/kubernetes.md`](infra/kubernetes.md) |
 | Terraform + LocalStack | [`infra/terraform.md`](infra/terraform.md) |
 

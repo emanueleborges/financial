@@ -106,8 +106,9 @@ docker compose --profile oracle up -d    # Oracle + notification-service :8081
 docker compose --profile obs up -d       # Prometheus, Grafana, Zipkin
 docker compose --profile ui up --build -d
 docker compose --profile jobs up --build -d
+docker compose --profile sonar up -d     # SonarQube Community :9000
 # tudo:
-docker compose --profile oracle --profile obs --profile ui --profile jobs up --build -d
+docker compose --profile oracle --profile obs --profile ui --profile jobs --profile sonar up --build -d
 ```
 
 | Serviço | URL |
@@ -119,11 +120,16 @@ docker compose --profile oracle --profile obs --profile ui --profile jobs up --b
 | Grafana (profile `obs`) | http://localhost:3001 |
 | Prometheus (profile `obs`) | http://localhost:9090 |
 | Zipkin (profile `obs`) | http://localhost:9411 |
+| SonarQube (profile `sonar`) | http://localhost:9000 |
 | LocalStack | http://localhost:4566 |
 
 ```bash
 cd backend && mvn test
 cd services/notification-service && mvn test
+
+# SonarQube local (após profile sonar + token em SONAR_TOKEN)
+./infra/sonar/scan-local.sh
+# GitHub Actions: secret SONAR_TOKEN → SonarCloud (specs/infra/sonar.md)
 
 cd infra/terraform/localstack && terraform init && terraform apply -auto-approve
 ```
@@ -132,6 +138,6 @@ Se o Docker falhar com `input/output error` no pull: o disco está cheio ou o st
 
 ## O que isto cobre numa vaga pleno Java / full stack
 
-**Dá para citar:** Java, Spring Boot, Spring Data/Security, REST, hexagonal, PostgreSQL, Oracle, MongoDB, Redis, Kafka, Angular, Docker, Kubernetes/Helm, Terraform, AWS SDK (S3) + LocalStack, Maven, JUnit/Mockito, GitHub Actions, Prometheus/Grafana.
+**Dá para citar:** Java, Spring Boot, Spring Data/Security, REST, hexagonal, PostgreSQL, Oracle, MongoDB, Redis, Kafka, Angular, Docker, Kubernetes/Helm, Terraform, AWS SDK (S3) + LocalStack, Maven, JUnit/Mockito, GitHub Actions, SonarQube/SonarCloud, Prometheus/Grafana.
 
 **Não é produção AWS:** sem ECS/EKS/RDS reais; cloud é laboratório (LocalStack + Terraform). Sem Quarkus, Payara ou Jenkins neste repo.

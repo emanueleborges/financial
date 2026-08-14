@@ -265,6 +265,25 @@ services:
       S3_BUCKET: financial-hub-receipts
     restart: unless-stopped
 
+  sonarqube:
+    profiles: ["sonar"]
+    image: sonarqube:25-community
+    container_name: fh-sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9000/api/system/status | grep -q UP"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 120s
+
 volumes:
   postgres_data:
   localstack_data:
@@ -272,3 +291,6 @@ volumes:
   grafana_data:
   mongo_data:
   oracle_data:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
