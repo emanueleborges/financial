@@ -13,7 +13,7 @@ if ! command -v helm >/dev/null; then
 fi
 
 kind create cluster --name "$CLUSTER" --wait 60s || true
-docker build -t financial-hub:1.0.0 "$ROOT/backend"
+docker build -t financial-hub:1.0.0 -f "$ROOT/backend/docker/Dockerfile" "$ROOT/backend"
 docker build -t notification-service:1.0.0 "$ROOT/services/notification-service"
 kind load docker-image financial-hub:1.0.0 --name "$CLUSTER"
 kind load docker-image notification-service:1.0.0 --name "$CLUSTER"
