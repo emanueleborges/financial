@@ -51,4 +51,4 @@ Setup único no SonarCloud: importar o repo GitHub; `sonar.projectKey` deve coin
 
 - Quality Gate bloqueando merge sem baseline
 - SonarQube self-hosted na nuvem
-- Análise de `web/` (Next.js legado)
+- Workflow gerado pelo GitHub (`.github/workflows/sonarcloud.yml` com `projectKey` vazio)

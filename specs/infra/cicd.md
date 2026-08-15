@@ -6,7 +6,7 @@ Tudo roda em CI pública **sem conta AWS**. Homologação local usa Kind (Kubern
 
 | Arquivo | Quando | O que faz |
 |---------|--------|-----------|
-| `.github/workflows/ci.yml` | push / PR | `mvn test` (API + notification-service), `npm run build` (Angular), lint Helm, build imagens Docker, **SonarCloud** (se `SONAR_TOKEN`) |
+| `.github/workflows/ci.yml` | push / PR | testes, Angular, Helm, imagens, **SonarCloud** (job `sonar`; usa `sonar-project.properties`) |
 | `.github/workflows/homolog.yml` | `workflow_dispatch` e push em `main` | build imagens, `helm lint` + `helm template`, sobe Kind e aplica o chart da API (smoke `/actuator/health` se o cluster tiver Postgres de teste) |
 
 ## Jobs do `ci.yml`

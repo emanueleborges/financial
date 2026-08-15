@@ -95,7 +95,8 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5
         with:
           args: >
-            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION || 'emanueleborges' }}
+            -Dsonar.projectKey=emanueleborges_financial
+            -Dsonar.organization=emanueleborges
       - name: Quality Gate
         if: env.SONAR_TOKEN != ''
         continue-on-error: true
