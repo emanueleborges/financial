@@ -24,7 +24,7 @@ Variável: `NEXT_PUBLIC_API_URL` (default em `.env.local`).
 
 1. Criar conta (`/register`) — CPF válido, ex.: `52998224725`
 2. Login automático → `/app` (saldo)
-3. Transferir com UUID do recebedor
+3. Transferir com CPF/CNPJ do recebedor
 4. Consultar TX e estornar se `COMPLETED`
 
 ## CORS

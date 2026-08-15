@@ -106,7 +106,7 @@ services:
       JWT_SECRET: financial-hub-secret-key-must-be-at-least-256-bits-long-for-hs256
       CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:4200
       ZIPKIN_ENDPOINT: http://zipkin:9411/api/v2/spans
-      TRACING_SAMPLE_PROBABILITY: ${TRACING_SAMPLE_PROBABILITY:-0.0}
+      TRACING_SAMPLE_PROBABILITY: ${TRACING_SAMPLE_PROBABILITY:-1.0}
       NOTIFICATION_CONSUMER_ENABLED: ${NOTIFICATION_CONSUMER_ENABLED:-true}
       FAVORITES_STORE: mongo
       MONGODB_URI: mongodb://mongo:27017
@@ -242,6 +242,20 @@ services:
     container_name: fh-angular
     ports:
       - "4200:80"
+    depends_on:
+      app:
+        condition: service_healthy
+
+  nextjs:
+    profiles: ["ui"]
+    build:
+      context: ../../web
+      dockerfile: Dockerfile
+    container_name: fh-nextjs
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
     depends_on:
       app:
         condition: service_healthy

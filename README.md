@@ -1,6 +1,6 @@
 # Financial Hub
 
-Plataforma P2P (estilo Pix): saldo consistente no PostgreSQL, eventos no Kafka, UI em Angular. O repositório usa **Spec-Driven Development** — a fonte da verdade é [`specs/`](specs/).
+Plataforma P2P (estilo Pix): saldo consistente no PostgreSQL, eventos no Kafka, UI em **Angular 19** e **Next.js 15 (React)**. O repositório usa **Spec-Driven Development** — a fonte da verdade é [`specs/`](specs/).
 
 ## Stack implementada
 
@@ -37,8 +37,8 @@ Plataforma P2P (estilo Pix): saldo consistente no PostgreSQL, eventos no Kafka, 
 
 | UI | Pasta | Stack | Porta |
 |----|-------|-------|-------|
-| **Angular (UI da vaga)** | `web-angular/` | Angular 19, standalone, TypeScript | `4200` |
-| Next.js (alternativa) | `web/` | Next.js 15, React 19, TypeScript | `3000` |
+| **Angular (UI da vaga)** | `web-angular/` | Angular 19, standalone, TypeScript | `4200` → http://localhost:4200 |
+| **Next.js / React (alternativa)** | `web/` | Next.js 15, React 19, TypeScript | `3000` → http://localhost:3000 |
 
 Telas: login, cadastro, saldo, transferência, extrato (PDF, estorno, favoritos).
 
@@ -73,8 +73,8 @@ Prometheus `:9090` · Grafana `:3001` (admin/admin) · Zipkin `:9411`
 |-------|--------|
 | `backend/` | API hexagonal, Flyway, Docker, k8s da API, Postman |
 | `services/notification-service/` | Microsserviço Oracle + Kafka |
-| `web-angular/` | Angular 19 |
-| `web/` | Next.js 15 |
+| `web-angular/` | Angular 19 (http://localhost:4200) |
+| `web/` | Next.js 15 + React 19 (http://localhost:3000) |
 | `jobs/daily-report/` | Job Python |
 | `infra/` | Helm, Kind, Terraform LocalStack |
 | `specs/` | Contratos SDD |
@@ -84,7 +84,7 @@ Prometheus `:9090` · Grafana `:3001` (admin/admin) · Zipkin `:9411`
 
 Pré-requisitos: Docker Desktop rodando, **≥ 10 GB livres no disco**, Java 17, Node 20+, Maven. Terraform (opcional): `brew tap hashicorp/tap && brew install hashicorp/tap/terraform`.
 
-O compose padrão **não** baixa Oracle (~1 GB) nem Grafana/Zipkin. Angular roda em `npm start`.
+O compose padrão **não** baixa Oracle (~1 GB) nem Grafana/Zipkin. As UIs sobem à parte: Angular (`npm start`) e Next.js (`npm run dev`).
 
 ```bash
 cd backend/docker
@@ -96,6 +96,9 @@ Sobe: Postgres, Redis, Kafka, LocalStack, Mongo e a API (`:8080`).
 ```bash
 # Angular em dev (API já em :8080)
 cd web-angular && npm install && npm start
+
+# Next.js / React (alternativa)
+cd web && npm install && npm run dev
 ```
 
 Perfis extras (quando houver disco):
@@ -104,7 +107,7 @@ Perfis extras (quando houver disco):
 cd backend/docker
 docker compose --profile oracle up -d    # Oracle + notification-service :8081
 docker compose --profile obs up -d       # Prometheus, Grafana, Zipkin
-docker compose --profile ui up --build -d
+docker compose --profile ui up --build -d   # Angular :4200 + Next.js/React :3000
 docker compose --profile jobs up --build -d
 docker compose --profile sonar up -d     # SonarQube Community :9000
 # tudo:
@@ -114,6 +117,7 @@ docker compose --profile oracle --profile obs --profile ui --profile jobs --prof
 | Serviço | URL |
 |---------|-----|
 | Angular (`npm start` ou profile `ui`) | http://localhost:4200 |
+| Next.js / React (`npm run dev` ou profile `ui`) | http://localhost:3000 |
 | API | http://localhost:8080 |
 | Swagger | http://localhost:8080/swagger-ui.html |
 | notification-service (profile `oracle`) | http://localhost:8081 |
@@ -138,6 +142,6 @@ Se o Docker falhar com `input/output error` no pull: o disco está cheio ou o st
 
 ## O que isto cobre numa vaga pleno Java / full stack
 
-**Dá para citar:** Java, Spring Boot, Spring Data/Security, REST, hexagonal, PostgreSQL, Oracle, MongoDB, Redis, Kafka, Angular, Docker, Kubernetes/Helm, Terraform, AWS SDK (S3) + LocalStack, Maven, JUnit/Mockito, GitHub Actions, SonarQube/SonarCloud, Prometheus/Grafana.
+**Dá para citar:** Java, Spring Boot, Spring Data/Security, REST, hexagonal, PostgreSQL, Oracle, MongoDB, Redis, Kafka, Angular, Next.js/React, Docker, Kubernetes/Helm, Terraform, AWS SDK (S3) + LocalStack, Maven, JUnit/Mockito, GitHub Actions, SonarQube/SonarCloud, Prometheus/Grafana.
 
 **Não é produção AWS:** sem ECS/EKS/RDS reais; cloud é laboratório (LocalStack + Terraform). Sem Quarkus, Payara ou Jenkins neste repo.
