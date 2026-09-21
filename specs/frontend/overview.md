@@ -1,8 +1,8 @@
 # Spec Frontend — Financial Hub Web
 
 **Status:** active  
-**UI da vaga:** Angular 19 (`web-angular/`) — [`angular.md`](angular.md)  
-**Alternativa:** Next.js 15 (`web/`)  
+**UI da vaga:** Angular 19 (`frontend/angular/`) — [`angular.md`](angular.md)  
+**Alternativa:** Next.js 15 (`frontend/next/`)  
 **API:** `specs/backend/api/rest-v1.md` → código `backend/`  
 **Notificações:** `specs/backend/services/notification.md` → `services/notification-service/`
 
@@ -14,8 +14,8 @@ Há **duas UIs** com o mesmo contrato de telas. A vaga pede Angular; Next.js per
 
 | UI | Pasta | Porta | Spec |
 |----|-------|-------|------|
-| Angular (canônica para a vaga) | `web-angular/` | `:4200` | [`angular.md`](angular.md) |
-| Next.js (alternativa) | `web/` | `:3000` | este arquivo (escopo v1) |
+| Angular (canônica para a vaga) | `frontend/angular/` | `:4200` | [`angular.md`](angular.md) |
+| Next.js (alternativa) | `frontend/next/` | `:3000` | este arquivo (escopo v1) |
 
 ## Identidade
 
@@ -90,5 +90,5 @@ notification-service deve permitir `http://localhost:4200`.
 6. Transações permitem favoritar CPF/CNPJ da contraparte
 7. Cada transação permite exportar comprovante em PDF
 8. Erros `VALIDATION_ERROR` com `fields` no campo correspondente
-9. Next.js: `npm run dev` em `:3000` com API em `:8080`
-10. Angular: `ng serve` em `:4200` com API em `:8080`
+9. Next.js: `cd frontend/next && npm run dev` em `:3000` com API em `:8080`
+10. Angular: `cd frontend/angular && npm start` em `:4200` com API em `:8080`

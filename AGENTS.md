@@ -26,12 +26,13 @@ Você está no repositório **projeto-banco** (Financial Hub).
 | notification-service | `specs/backend/services/notification.md` |
 | Web Angular (vaga) | `specs/frontend/angular.md` |
 | Web Next.js | `specs/frontend/overview.md` |
+| Docker Compose | `specs/infra/compose.md` |
 | CI/CD | `specs/infra/cicd.md` |
 | K8s / Helm | `specs/infra/kubernetes.md` |
 | Terraform local | `specs/infra/terraform.md` |
 | Código API | `backend/` |
-| Código Angular | `web-angular/` |
-| Código Next.js | `web/` |
+| Código Angular | `frontend/angular/` |
+| Código Next.js | `frontend/next/` |
 
 ## Comandos úteis
 
@@ -42,14 +43,19 @@ cd backend && mvn test
 # notification-service
 cd services/notification-service && mvn test
 
-# Stack local (API, Angular, Oracle, Mongo, Kafka, LocalStack…)
-cd backend/docker && docker compose up --build -d
+# Stack local (API, UIs, Postgres, Redis, Kafka, Mongo, LocalStack, Prometheus, Grafana, Zipkin)
+docker compose up --build -d
+
+# Opcionais: Oracle+notification, SonarQube, job Python
+# docker compose --profile oracle up --build -d
+# docker compose --profile sonar up --build -d
+# docker compose --profile jobs up --build -d
 
 # Angular (dev)
-cd web-angular && npm install && npm start
+cd frontend/angular && npm install && npm start
 
 # Next.js (alternativa)
-cd web && npm install && npm run dev
+cd frontend/next && npm install && npm run dev
 
 # Terraform no LocalStack
 cd infra/terraform/localstack && terraform init && terraform apply -auto-approve

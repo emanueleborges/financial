@@ -15,7 +15,7 @@ specs/
 │   ├── events/
 │   ├── architecture/
 │   └── services/
-├── frontend/            # Angular (web-angular/) e Next.js (web/)
+├── frontend/            # specs das UIs; código em frontend/angular e frontend/next
 └── infra/               # CI/CD, K8s/Helm, Terraform local
 ```
 
@@ -50,6 +50,7 @@ specs/
 
 | Spec | Caminho |
 |------|---------|
+| Docker Compose (raiz) | [`infra/compose.md`](infra/compose.md) |
 | CI/CD GitHub Actions | [`infra/cicd.md`](infra/cicd.md) |
 | SonarQube / SonarCloud | [`infra/sonar.md`](infra/sonar.md) |
 | Kubernetes / Helm | [`infra/kubernetes.md`](infra/kubernetes.md) |

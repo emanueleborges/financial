@@ -13,9 +13,9 @@ Tudo roda em CI pública **sem conta AWS**. Homologação local usa Kind (Kubern
 
 1. **backend** — JDK 17, `mvn -B test` em `backend/`
 2. **notification** — JDK 17, `mvn -B test` em `services/notification-service/`
-3. **angular** — Node 20, `npm ci && npm run build` em `web-angular/`
-4. **images** — `docker build` da API, notification-service e Angular (sem push obrigatório)
-5. **sonar** — JaCoCo + SonarScanner → SonarCloud (ver [`sonar.md`](sonar.md)); local usa SonarQube Community no compose
+3. **angular** — Node 20, `npm ci && npm run build` em `frontend/angular/`
+4. **images** — `docker build` da API (`backend/Dockerfile`), notification-service e Angular (sem push obrigatório)
+5. **sonar** — JaCoCo + SonarScanner → SonarCloud (ver [`sonar.md`](sonar.md)); local: profile `sonar` no Compose
 
 ## Homologação
 

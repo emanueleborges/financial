@@ -1,7 +1,7 @@
-# Financial Hub — Web (Next.js)
+# Financial Hub — Web (Next.js / React)
 
-Frontend conforme [`specs/frontend/overview.md`](../specs/frontend/overview.md).  
-Contrato da API: [`specs/backend/api/rest-v1.md`](../specs/backend/api/rest-v1.md).
+Frontend conforme [`specs/frontend/overview.md`](../../specs/frontend/overview.md).  
+Contrato da API: [`specs/backend/api/rest-v1.md`](../../specs/backend/api/rest-v1.md).
 
 ## Pré-requisitos
 
@@ -11,7 +11,7 @@ Contrato da API: [`specs/backend/api/rest-v1.md`](../specs/backend/api/rest-v1.m
 ## Subir
 
 ```bash
-cd web
+cd frontend/next
 npm install
 npm run dev
 ```
@@ -30,10 +30,3 @@ Variável: `NEXT_PUBLIC_API_URL` (default em `.env.local`).
 ## CORS
 
 O backend precisa permitir `http://localhost:3000`. Já configurado em `SecurityConfig` + `app.cors.allowed-origins`.
-
-Após alterar o backend:
-
-```bash
-cd backend/docker
-docker compose up --build -d app
-```

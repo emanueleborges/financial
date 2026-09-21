@@ -9,6 +9,11 @@ spring:
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
+      idle-timeout: ${DB_POOL_IDLE_TIMEOUT:300000}
+      connection-timeout: ${DB_POOL_CONNECTION_TIMEOUT:30000}
+      max-lifetime: ${DB_POOL_MAX_LIFETIME:600000}
+      pool-name: FinancialHubPool
+      leak-detection-threshold: ${DB_POOL_LEAK_DETECTION:60000}
 
   jpa:
     hibernate:
@@ -65,6 +70,13 @@ spring:
 
 server:
   port: ${SERVER_PORT:8080}
+  tomcat:
+    threads:
+      max: ${SERVER_TOMCAT_MAX_THREADS:200}
+      min-spare: ${SERVER_TOMCAT_MIN_SPARE_THREADS:10}
+    max-connections: ${SERVER_TOMCAT_MAX_CONNECTIONS:10000}
+    accept-count: ${SERVER_TOMCAT_ACCEPT_COUNT:100}
+    connection-timeout: ${SERVER_TOMCAT_CONNECTION_TIMEOUT:20000}
   error:
     include-message: always
 
@@ -85,6 +97,9 @@ management:
     tracing:
       endpoint: ${ZIPKIN_ENDPOINT:http://localhost:9411/api/v2/spans}
   metrics:
+    export:
+      prometheus:
+        enabled: true
     tags:
       application: ${spring.application.name}
 
@@ -115,6 +130,8 @@ app:
       transaction-completed: transaction.completed
       transaction-failed: transaction.failed
       dlq: transaction.dlq
+  latency:
+    simulated-ms: ${SIMULATED_LATENCY_MS:0}
   consumers:
     notification:
       enabled: ${NOTIFICATION_CONSUMER_ENABLED:true}

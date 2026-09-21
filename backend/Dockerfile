@@ -15,6 +15,8 @@ RUN apt-get update \
     && groupadd -r appgroup \
     && useradd -r -g appgroup appuser
 
+RUN mkdir -p /dumps && chown -R appuser:appgroup /dumps
+
 USER appuser
 
 COPY --from=build /app/app.jar app.jar
@@ -24,7 +26,4 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:8080/actuator/health || exit 1
 
-ENTRYPOINT ["java", \
-  "-XX:+UseContainerSupport", \
-  "-XX:MaxRAMPercentage=75.0", \
-  "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -jar app.jar"]

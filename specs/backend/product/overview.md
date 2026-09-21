@@ -3,7 +3,7 @@
 **Status:** active  
 **Origem:** `DESAFIO.MD`  
 **Código:** `backend/`  
-**UI:** ver `specs/frontend/overview.md` — Angular (`web-angular/`) e Next.js (`web/`)
+**UI:** ver `specs/frontend/overview.md` — Angular (`frontend/angular/`) e Next.js (`frontend/next/`)
 
 ## Visão
 
@@ -73,4 +73,4 @@ Backend de fintech que processa transferências P2P em tempo real, com consistê
 
 1. Duas transferências concorrentes não geram saldo negativo.
 2. Replay de mensagem Kafka não duplica side-effect (idempotência por `event_id` + consumer).
-3. Stack local sobe com `docker compose` em `backend/docker`.
+3. Stack local sobe com `docker compose` na raiz do repositório.

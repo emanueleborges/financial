@@ -52,7 +52,7 @@ flowchart LR
 
 ### Nova tela / fluxo UI (frontend)
 1. Atualizar `frontend/overview.md` (e `frontend/angular.md` se for Angular)
-2. Implementar em `web-angular/` e/ou `web/`
+2. Implementar em `frontend/angular/` e/ou `frontend/next/`
 3. Se precisar de API nova: atualizar `backend/api/rest-v1.md` **antes**
 
 ### Novo serviço

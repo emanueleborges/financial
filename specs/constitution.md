@@ -28,7 +28,7 @@ Plataforma de pagamentos instantâneos P2P (estilo Pix) com:
 | Dentro do escopo | Fora do escopo (não inventar) |
 |------------------|-------------------------------|
 | Users, transferências, estorno | Open banking, cartões, boletos |
-| Frontend Angular (`web-angular/`) e Next.js (`web/`) conforme `specs/frontend/` | Features de UI sem spec |
+| Frontend Angular (`frontend/angular/`) e Next.js (`frontend/next/`) conforme `specs/frontend/` | Features de UI sem spec |
 | Kafka events definidos em `specs/backend/events/` | Novos brokers sem atualizar a spec |
 | S3 para comprovantes PDF (LocalStack local / AWS via Terraform) | Outros storage sem decisão em ADR |
 | notification-service (Oracle) + favoritos (Mongo) | Ledger de saldo fora do PostgreSQL |

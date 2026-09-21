@@ -64,6 +64,6 @@ Mesmo `JWT_SECRET` da API principal. Claim `sub` = documento.
 
 ## Local
 
-Compose: serviço `notification` + `oracle`. Profile `docker` no financial-hub desliga o `NotificationConsumer` embutido (`app.consumers.notification.enabled=false`).
+Compose: `docker compose --profile oracle up --build -d` sobe Oracle Free 23 e o `notification-service` em `:8081`. Sem esse profile, o consumidor de notificação fica na API. Com o serviço externo, use `NOTIFICATION_CONSUMER_ENABLED=false` no `financial-hub`.
 
 Testes do serviço usam H2 `MODE=Oracle` (sem container Oracle no `mvn test`).

@@ -69,13 +69,13 @@ services:
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
     volumes:
-      - "./localstack-init.sh:/etc/localstack/init/ready.d/init-s3.sh"
+      - "./docker/localstack-init.sh:/etc/localstack/init/ready.d/init-s3.sh"
       - localstack_data:/var/lib/localstack
 
   app:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: fh-app
     depends_on:
       postgres:
@@ -87,6 +87,8 @@ services:
       localstack:
         condition: service_started
       mongo:
+        condition: service_started
+      zipkin:
         condition: service_started
     ports:
       - "8080:8080"
@@ -107,10 +109,14 @@ services:
       CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:4200
       ZIPKIN_ENDPOINT: http://zipkin:9411/api/v2/spans
       TRACING_SAMPLE_PROBABILITY: ${TRACING_SAMPLE_PROBABILITY:-1.0}
+      SIMULATED_LATENCY_MS: ${SIMULATED_LATENCY_MS:-0}
+      JAVA_OPTS: ${JAVA_OPTS:--XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dumps}
       NOTIFICATION_CONSUMER_ENABLED: ${NOTIFICATION_CONSUMER_ENABLED:-true}
       FAVORITES_STORE: mongo
       MONGODB_URI: mongodb://mongo:27017
       MONGODB_DATABASE: financialhub
+    volumes:
+      - ./docker/dumps:/dumps
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 30s
@@ -119,7 +125,6 @@ services:
       start_period: 90s
 
   prometheus:
-    profiles: ["obs"]
     image: prom/prometheus:v2.54.1
     container_name: fh-prometheus
     depends_on:
@@ -128,7 +133,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     command:
       - --config.file=/etc/prometheus/prometheus.yml
@@ -141,7 +146,6 @@ services:
       retries: 5
 
   grafana:
-    profiles: ["obs"]
     image: grafana/grafana:11.2.0
     container_name: fh-grafana
     depends_on:
@@ -155,11 +159,10 @@ services:
       GF_USERS_ALLOW_SIGN_UP: "false"
       GF_SERVER_ROOT_URL: http://localhost:3001
     volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
       - grafana_data:/var/lib/grafana
 
   zipkin:
-    profiles: ["obs"]
     image: openzipkin/zipkin:3.4
     container_name: fh-zipkin
     ports:
@@ -208,7 +211,7 @@ services:
   notification:
     profiles: ["oracle"]
     build:
-      context: ../../services/notification-service
+      context: ./services/notification-service
       dockerfile: Dockerfile
     container_name: fh-notification
     depends_on:
@@ -235,9 +238,8 @@ services:
       start_period: 90s
 
   angular:
-    profiles: ["ui"]
     build:
-      context: ../../web-angular
+      context: ./frontend/angular
       dockerfile: Dockerfile
     container_name: fh-angular
     ports:
@@ -247,9 +249,8 @@ services:
         condition: service_healthy
 
   nextjs:
-    profiles: ["ui"]
     build:
-      context: ../../web
+      context: ./frontend/next
       dockerfile: Dockerfile
     container_name: fh-nextjs
     ports:
@@ -263,7 +264,7 @@ services:
   daily-report:
     profiles: ["jobs"]
     build:
-      context: ../../jobs/daily-report
+      context: ./jobs/daily-report
       dockerfile: Dockerfile
     container_name: fh-daily-report
     depends_on:

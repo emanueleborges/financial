@@ -2,7 +2,7 @@
 
 **Status:** active  
 **Stack:** Angular 19 (standalone components) + TypeScript  
-**Código:** `web-angular/`  
+**Código:** `frontend/angular/`  
 **API:** `specs/backend/api/rest-v1.md`  
 **Notificações:** `specs/backend/services/notification.md`
 
@@ -41,7 +41,7 @@ notificationUrl: 'http://localhost:8081'
 ## Build local
 
 ```bash
-cd web-angular
+cd frontend/angular
 npm install
 npm start          # http://localhost:4200
 npm run build

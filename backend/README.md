@@ -31,12 +31,12 @@ Backend de fintech P2P (estilo Pix) com Clean Architecture, Spring Boot 3, Postg
 ### Subir todo o ambiente
 
 ```bash
-cd backend/docker
-chmod +x localstack-init.sh
 docker compose up --build -d
 ```
 
 Serviços:
+- **Angular**: http://localhost:4200
+- **Next.js / React**: http://localhost:3000
 - **API**: http://localhost:8080
 - **Swagger**: http://localhost:8080/swagger-ui.html
 - **Prometheus metrics (app)**: http://localhost:8080/actuator/prometheus
@@ -46,9 +46,13 @@ Serviços:
 - **PostgreSQL**: localhost:5432
 - **Redis**: localhost:6379
 - **Kafka**: localhost:9092
+
+Opcionais: `docker compose --profile oracle up -d` (`:8081`) e `docker compose --profile sonar up -d` (`:9000`).
 - **LocalStack S3**: localhost:4566
 
 Dashboard Grafana provisionado: **Financial Hub — Overview** (JVM, HTTP, HikariCP, circuit breaker). Traces HTTP/Kafka no Zipkin (sampling 100% no profile `docker`).
+
+Detalhes de correlação, pools, JVM e limites operacionais estão em [`../../specs/infra/observability.md`](../../specs/infra/observability.md). A API devolve `X-Correlation-Id` em cada resposta e aceita esse header para continuar uma correlação existente.
 
 ### Fluxo rápido de teste
 

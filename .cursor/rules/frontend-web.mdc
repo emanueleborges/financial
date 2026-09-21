@@ -1,6 +1,6 @@
 ---
 description: Spec e convenções do frontend Next.js
-globs: web/**/*.{ts,tsx,css}
+globs: frontend/next/**/*.{ts,tsx,css}
 alwaysApply: false
 ---
 

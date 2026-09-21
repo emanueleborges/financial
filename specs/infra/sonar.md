@@ -6,7 +6,7 @@ Análise estática **não altera** saldo, ledger nem regras BR-*. PostgreSQL con
 
 | Onde | Servidor | Como |
 |------|----------|------|
-| Máquina local | SonarQube Community (`:9000`) | Compose profile `sonar` + `./infra/sonar/scan-local.sh` |
+| Máquina local | SonarQube Community (`:9000`) | `docker compose --profile sonar up -d` + `./infra/sonar/scan-local.sh` |
 | GitHub Actions | [SonarCloud](https://sonarcloud.io) | Job `sonar` em `.github/workflows/ci.yml` |
 
 Os dashboards são **independentes**. O mesmo `sonar-project.properties` alimenta os dois; só mudam `sonar.host.url` e o token.
@@ -15,17 +15,16 @@ Os dashboards são **independentes**. O mesmo `sonar-project.properties` aliment
 
 - `backend/src/main/java` + JaCoCo (`backend/target/site/jacoco/jacoco.xml`)
 - `services/notification-service/src/main/java` + JaCoCo
-- `web-angular/src` (TypeScript; **fora da métrica de cobertura**; spec não exige testes de cobertura no Angular)
+- `frontend/angular/src` (TypeScript; **fora da métrica de cobertura**; spec não exige testes de cobertura no Angular)
 
 Meta de cobertura (JaCoCo / Quality Gate local): **≥ 60%** nas linhas Java da API e do notification-service.
 
 ## Local
 
 ```bash
-cd backend/docker
-docker compose --profile sonar up -d   # imagem sonarqube:community
-# aguardar UP em http://localhost:9000 (primeiro boot: 1–3 min)
-# login inicial: admin / admin — trocar senha e gerar um token
+docker compose --profile sonar up --build -d
+# SonarQube em http://localhost:9000 (primeiro boot: 1–3 min)
+# login inicial: admin / admin — troque a senha e gere um token
 
 export SONAR_TOKEN=...   # token local (User → My Account → Security)
 ./infra/sonar/scan-local.sh

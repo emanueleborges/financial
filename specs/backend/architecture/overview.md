@@ -42,8 +42,9 @@ financial-hub (8080)  --Kafka-->  notification-service (8081)
 
 ## Infra obrigatória (local)
 
-Compose em `backend/docker/`:
-- app, notification, postgres, oracle, mongo, redis, zookeeper, kafka, localstack, daily-report, angular, prometheus, grafana, zipkin
+Compose na raiz (`docker-compose.yml`, ver [`specs/infra/compose.md`](../../infra/compose.md)):
+- app, postgres, mongo, redis, zookeeper, kafka, localstack, angular, nextjs, prometheus, grafana, zipkin
+- profiles: `oracle` (Oracle + notification-service), `sonar` (SonarQube), `jobs` (daily-report)
 
 K8s: `backend/k8s/` + Helm `infra/k8s/helm/financial-hub/` (Deployment, Service, probes Actuator).
 

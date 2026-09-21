@@ -6,4 +6,4 @@ Inbox de notificações P2P. Spec: [`specs/backend/services/notification.md`](..
 mvn test
 ```
 
-No compose: Oracle Free 23 + Kafka, porta **8081**.
+No compose (opcional): `docker compose --profile oracle up --build -d` — Oracle Free 23 + Kafka, porta **8081**.
