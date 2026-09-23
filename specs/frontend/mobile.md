@@ -38,7 +38,7 @@ Mesmo sistema das UIs web (`overview.md`): ink `#07131f`, teal `#145a55`, foam `
 | `/register` | Cadastro + matrícula biométrica | público |
 | `/app` | Saldo | JWT |
 | `/app/transfer` | Transferência (senha obrigatória) | JWT |
-| `/app/transactions` | Extrato + estorno | JWT |
+| `/app/transactions` | Extrato + estorno; cada lançamento mostra data e hora locais (`createdAt`) | JWT |
 
 ## Ambiente
 
@@ -67,3 +67,4 @@ npx expo start
 3. Login biométrico não envia senha nem biometria à API (só `refreshToken`).
 4. JWT no SecureStore; rotas `/app` protegidas.
 5. Sem UUID de usuário na UI.
+6. Cada item do extrato exibe data e hora da movimentação no fuso do aparelho (`dd/MM/aaaa HH:mm:ss`).

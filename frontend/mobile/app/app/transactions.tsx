@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { api, type StatementResponse } from "../../src/lib/api";
 import { useAuth } from "../../src/lib/auth";
+import { formatDateTime } from "../../src/lib/datetime";
 import { formatBRL } from "../../src/lib/money";
 import { colors, fonts } from "../../src/theme";
 import { Alert, Card, Display, GhostButton, Muted, Screen } from "../../src/ui";
@@ -57,6 +58,7 @@ export default function Transactions() {
               <Muted>
                 {tx.payerDocument} → {tx.payeeDocument} · {tx.status}
               </Muted>
+              <Muted>{formatDateTime(tx.createdAt)}</Muted>
               {canReverse ? (
                 <GhostButton label="Estornar" onPress={() => void reverse(tx.id)} />
               ) : null}

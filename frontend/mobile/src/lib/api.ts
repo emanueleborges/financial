@@ -83,6 +83,7 @@ export type TransactionResponse = {
   amount: number;
   status: string;
   type: string;
+  createdAt: string;
 };
 
 export type StatementResponse = {

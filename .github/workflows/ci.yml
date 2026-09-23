@@ -104,4 +104,5 @@ jobs:
         timeout-minutes: 5
       - name: Sem SONAR_TOKEN
         if: env.SONAR_TOKEN == ''
-        run: echo "::warning::Defina o secret SONAR_TOKEN (SonarCloud) para publicar a análise. Spec: specs/infra/sonar.md"
+        run: |
+          echo "::warning::Defina o secret SONAR_TOKEN (SonarCloud) para publicar a análise. Veja specs/infra/sonar.md"
