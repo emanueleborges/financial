@@ -26,7 +26,7 @@
         <bucket4j.version>8.10.1</bucket4j.version>
         <testcontainers.version>1.21.4</testcontainers.version>
         <sonar.organization>emanuelborges</sonar.organization>
-        <sonar.projectKey>emanueleborges_financial</sonar.projectKey>
+        <sonar.projectKey>49f61a76bff03cfcca52b791bfc3ce45197268e7</sonar.projectKey>
         <sonar.projectName>Financial Hub</sonar.projectName>
         <sonar.projectVersion>1.0.0-SNAPSHOT</sonar.projectVersion>
         <sonar.projectDescription>Plataforma de Pagamentos Instantâneos P2P</sonar.projectDescription>
