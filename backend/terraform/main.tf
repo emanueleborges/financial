@@ -114,6 +114,14 @@ resource "aws_s3_bucket_public_access_block" "receipts" {
   restrict_public_buckets = true
 }
 
+# ── CloudWatch Logs da aplicação ────────────────────────
+resource "aws_cloudwatch_log_group" "app" {
+  name              = "/${var.project_name}/${var.environment}"
+  retention_in_days = 14
+
+  tags = { Name = "${var.project_name}-logs" }
+}
+
 # ── IAM Role para a aplicação ───────────────────────────
 resource "aws_iam_role" "app" {
   name = "${var.project_name}-app-role"
@@ -151,11 +159,11 @@ resource "aws_iam_policy" "app" {
         Sid    = "CloudWatchLogs"
         Effect = "Allow"
         Action = [
-          "logs:CreateLogGroup",
           "logs:CreateLogStream",
-          "logs:PutLogEvents"
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams"
         ]
-        Resource = "*"
+        Resource = "${aws_cloudwatch_log_group.app.arn}:*"
       }
     ]
   })

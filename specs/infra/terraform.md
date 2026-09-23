@@ -27,7 +27,7 @@ A API usa `AWS_ENDPOINT=http://localhost:4566` (ou `http://localstack:4566` no c
 ## AWS real (opcional)
 
 `backend/terraform/` permanece como o módulo “o que seria produção”: VPC, RDS PostgreSQL, S3, IAM role EC2.  
-Não é aplicado neste laboratório.
+A role grava CloudWatch Logs só no log group `/${project_name}/${environment}`. Não é aplicado neste laboratório.
 
 ## O que não está no laboratório
 
