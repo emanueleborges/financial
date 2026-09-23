@@ -29,11 +29,34 @@ public class AuthenticateService implements AuthenticateUseCase {
             throw new DomainException("INVALID_CREDENTIALS", "Credenciais inválidas");
         }
 
+        return tokensFor(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AuthResult refresh(String refreshToken) {
+        if (refreshToken == null || refreshToken.isBlank()
+                || !tokenProvider.isValid(refreshToken)
+                || !"refresh".equals(tokenProvider.extractType(refreshToken))) {
+            throw new DomainException("INVALID_CREDENTIALS", "Credenciais inválidas");
+        }
+
+        String document = tokenProvider.extractDocument(refreshToken);
+        User user = userRepository.findByDocument(document)
+                .orElseThrow(() -> new DomainException("INVALID_CREDENTIALS", "Credenciais inválidas"));
+
+        if (!user.getId().equals(tokenProvider.extractUserId(refreshToken))) {
+            throw new DomainException("INVALID_CREDENTIALS", "Credenciais inválidas");
+        }
+
+        return tokensFor(user);
+    }
+
+    private AuthResult tokensFor(User user) {
         String accessToken = tokenProvider.generateAccessToken(
                 user.getId(), user.getDocument(), user.getEmail());
         String refreshToken = tokenProvider.generateRefreshToken(
                 user.getId(), user.getDocument(), user.getEmail());
-
         return new AuthResult(
                 accessToken,
                 refreshToken,

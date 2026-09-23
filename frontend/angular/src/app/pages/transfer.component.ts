@@ -79,6 +79,11 @@ type PayeeLookup =
           <fh-money-input [value]="amountMasked" [error]="!!fieldErrors()['amount']" (valueChange)="onMoney($event)" />
           @if (fieldErrors()['amount']) { <p class="field-error">{{ fieldErrors()['amount'] }}</p> }
         </label>
+        <label class="field">
+          <span class="label">Senha da conta</span>
+          <input class="input" type="password" autocomplete="current-password" [class.error]="!!fieldErrors()['password']" [(ngModel)]="password" name="password" required minlength="6" maxlength="100" />
+          @if (fieldErrors()['password']) { <p class="field-error">{{ fieldErrors()['password'] }}</p> }
+        </label>
         <fh-form-error [error]="error()" (dismiss)="error.set(null)" />
         <button class="btn btn-primary" type="submit" [disabled]="loading() || lookup().status !== 'found'">
           {{ loading() ? 'Enviando…' : 'Confirmar transferência' }}
@@ -105,6 +110,7 @@ export class TransferComponent implements OnInit {
   payeeDocument = '';
   amountMasked = '';
   amountValue: number | null = null;
+  password = '';
   error = signal<unknown>(null);
   fieldErrors = signal<Record<string, string>>({});
   result = signal<TransactionResponse | null>(null);
@@ -243,6 +249,7 @@ export class TransferComponent implements OnInit {
     if (!isValidDocumentLength(digits)) local['payeeDocument'] = 'Informe um CPF (11 dígitos) ou CNPJ (14 dígitos)';
     else if (lookup.status !== 'found') local['payeeDocument'] = 'Aguarde a identificação do recebedor';
     if (amount == null || amount <= 0) local['amount'] = 'Valor deve ser maior que zero';
+    if (this.password.length < 6) local['password'] = 'Senha deve ter entre 6 e 100 caracteres';
     this.fieldErrors.set(local);
     if (Object.keys(local).length) {
       this.error.set(new ApiClientError(400, { code: 'VALIDATION_ERROR', message: 'Um ou mais campos são inválidos', fields: local }));
@@ -252,12 +259,13 @@ export class TransferComponent implements OnInit {
     this.error.set(null);
     try {
       const tx = await this.api.transfer(
-        { payerDocument: session.document, payeeDocument: digits, amount: amount as number },
+        { payerDocument: session.document, payeeDocument: digits, amount: amount as number, password: this.password },
         crypto.randomUUID()
       );
       this.result.set(tx);
       this.amountMasked = '';
       this.amountValue = null;
+      this.password = '';
     } catch (err) {
       this.error.set(err);
       if (err instanceof ApiClientError) this.fieldErrors.set(err.fields);

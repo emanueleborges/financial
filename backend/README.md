@@ -92,7 +92,8 @@ curl -X POST http://localhost:8080/api/v1/transactions \
   -d '{
     "payerDocument": "52998224725",
     "payeeDocument": "39053344705",
-    "amount": 150.00
+    "amount": 150.00,
+    "password": "senha123"
   }'
 ```
 

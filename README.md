@@ -124,6 +124,7 @@ flowchart LR
 |-----------|-------|-----|
 | Angular | `frontend/angular/` | http://localhost:4200 |
 | Next.js / React | `frontend/next/` | http://localhost:3000 |
+| Mobile Expo | `frontend/mobile/` | Expo Go / simulador |
 
 ### Microsserviço complementar
 
@@ -209,7 +210,7 @@ flowchart LR
 1. Usuário faz login com CPF/CNPJ e senha.
 2. O backend valida as credenciais com BCrypt e oferece token JWT.
 3. A API exige autenticação em endpoints sensíveis.
-4. O cliente consulta saldo ou realiza transferência.
+4. O cliente consulta saldo ou realiza transferência informando a senha da conta.
 5. O sistema valida regras de negócio no banco.
 6. A transação é registrada no PostgreSQL como fonte da verdade.
 7. Eventos de negócio são emitidos em Kafka para consumidores secundários.
@@ -300,6 +301,7 @@ Dev das UIs sem container (se a API já estiver no Docker):
 ```bash
 cd frontend/angular && npm install && npm start
 cd frontend/next && npm install && npm run dev
+cd frontend/mobile && npm install && npx expo start
 ```
 
 ### Kubernetes

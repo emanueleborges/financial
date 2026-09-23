@@ -29,6 +29,7 @@ class TransferFlowIntegrationTest extends AbstractIntegrationTest {
                                 "payerDocument", PAYER_DOC,
                                 "payeeDocument", PAYEE_DOC,
                                 "amount", new BigDecimal("250.00"),
+                                "password", PASSWORD,
                                 "idempotencyKey", "it-transfer-" + UUID.randomUUID()
                         ))))
                 .andExpect(status().isCreated())
@@ -116,6 +117,7 @@ class TransferFlowIntegrationTest extends AbstractIntegrationTest {
                                 "payerDocument", PAYER_DOC,
                                 "payeeDocument", PAYEE_DOC,
                                 "amount", new BigDecimal("10.00"),
+                                "password", PASSWORD,
                                 "idempotencyKey", key
                         ))))
                 .andExpect(status().isCreated())
@@ -128,6 +130,7 @@ class TransferFlowIntegrationTest extends AbstractIntegrationTest {
                                 "payerDocument", PAYER_DOC,
                                 "payeeDocument", PAYEE_DOC,
                                 "amount", new BigDecimal("10.00"),
+                                "password", PASSWORD,
                                 "idempotencyKey", key
                         ))))
                 .andExpect(status().isCreated())

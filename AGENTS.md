@@ -26,6 +26,7 @@ Você está no repositório **projeto-banco** (Financial Hub).
 | notification-service | `specs/backend/services/notification.md` |
 | Web Angular (vaga) | `specs/frontend/angular.md` |
 | Web Next.js | `specs/frontend/overview.md` |
+| Mobile Expo | `specs/frontend/mobile.md` |
 | Docker Compose | `specs/infra/compose.md` |
 | CI/CD | `specs/infra/cicd.md` |
 | K8s / Helm | `specs/infra/kubernetes.md` |
@@ -33,6 +34,7 @@ Você está no repositório **projeto-banco** (Financial Hub).
 | Código API | `backend/` |
 | Código Angular | `frontend/angular/` |
 | Código Next.js | `frontend/next/` |
+| Código mobile | `frontend/mobile/` |
 
 ## Comandos úteis
 
@@ -56,6 +58,9 @@ cd frontend/angular && npm install && npm start
 
 # Next.js (alternativa)
 cd frontend/next && npm install && npm run dev
+
+# Mobile (Expo + Face ID / digital no cadastro)
+cd frontend/mobile && npm install && npx expo start
 
 # Terraform no LocalStack
 cd infra/terraform/localstack && terraform init && terraform apply -auto-approve

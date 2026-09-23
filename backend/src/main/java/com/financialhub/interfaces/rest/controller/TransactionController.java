@@ -53,6 +53,7 @@ public class TransactionController {
                 request.payeeDocument(),
                 auth.document(),
                 request.amount(),
+                request.password(),
                 idempotencyKey
         ));
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(tx));

@@ -40,7 +40,10 @@ export class ApiService {
     return this.get<StatementResponse>(`/api/v1/users/${document}/transactions?limit=${limit}`);
   }
 
-  transfer(body: { payerDocument: string; payeeDocument: string; amount: number }, idempotencyKey: string) {
+  transfer(
+    body: { payerDocument: string; payeeDocument: string; amount: number; password: string },
+    idempotencyKey: string,
+  ) {
     return this.post<TransactionResponse>('/api/v1/transactions', body, {
       'Idempotency-Key': idempotencyKey,
     });

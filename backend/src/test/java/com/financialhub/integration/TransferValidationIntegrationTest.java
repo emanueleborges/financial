@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.emptyOrNullString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,7 +27,8 @@ class TransferValidationIntegrationTest extends AbstractIntegrationTest {
                         .content(objectMapper.writeValueAsString(Map.of(
                                 "payerDocument", PAYER_DOC,
                                 "payeeDocument", PAYEE_DOC,
-                                "amount", new BigDecimal("99999.00")
+                                "amount", new BigDecimal("99999.00"),
+                                "password", PASSWORD
                         ))))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.code", not(emptyOrNullString())));
@@ -43,7 +45,8 @@ class TransferValidationIntegrationTest extends AbstractIntegrationTest {
                         .content(objectMapper.writeValueAsString(Map.of(
                                 "payerDocument", PAYER_DOC,
                                 "payeeDocument", PAYEE_DOC,
-                                "amount", new BigDecimal("10.00")
+                                "amount", new BigDecimal("10.00"),
+                                "password", PASSWORD
                         ))))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("FORBIDDEN"));
@@ -60,7 +63,8 @@ class TransferValidationIntegrationTest extends AbstractIntegrationTest {
                         .content(objectMapper.writeValueAsString(Map.of(
                                 "payerDocument", PAYER_DOC,
                                 "payeeDocument", PAYER_DOC,
-                                "amount", new BigDecimal("10.00")
+                                "amount", new BigDecimal("10.00"),
+                                "password", PASSWORD
                         ))))
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -78,6 +82,7 @@ class TransferValidationIntegrationTest extends AbstractIntegrationTest {
                                         "payerDocument", PAYER_DOC,
                                         "payeeDocument", PAYEE_DOC,
                                         "amount", new BigDecimal("20.00"),
+                                        "password", PASSWORD,
                                         "idempotencyKey", "rev-" + UUID.randomUUID()
                                 ))))
                         .andExpect(status().isCreated())
@@ -95,5 +100,46 @@ class TransferValidationIntegrationTest extends AbstractIntegrationTest {
                                 "reason", "não autorizado"
                         ))))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void shouldRejectTransferWithoutPassword() throws Exception {
+        seedPayerAndPayee();
+        String token = login(PAYER_DOC);
+
+        mockMvc.perform(post("/api/v1/transactions")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of(
+                                "payerDocument", PAYER_DOC,
+                                "payeeDocument", PAYEE_DOC,
+                                "amount", new BigDecimal("10.00")
+                        ))))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.fields.password").exists());
+    }
+
+    @Test
+    void shouldRejectTransferWithWrongPassword() throws Exception {
+        seedPayerAndPayee();
+        String token = login(PAYER_DOC);
+
+        mockMvc.perform(post("/api/v1/transactions")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of(
+                                "payerDocument", PAYER_DOC,
+                                "payeeDocument", PAYEE_DOC,
+                                "amount", new BigDecimal("10.00"),
+                                "password", "errada1"
+                        ))))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value("INVALID_CREDENTIALS"));
+
+        mockMvc.perform(get("/api/v1/users/{document}/balance", PAYER_DOC)
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.balance").value(2000.00));
     }
 }

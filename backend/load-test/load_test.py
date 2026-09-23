@@ -95,6 +95,7 @@ def exercise_one(args: argparse.Namespace, payer: dict, payee: dict, sequence: i
         "payerDocument": payer["document"],
         "payeeDocument": payee["document"],
         "amount": amount,
+        "password": payer["password"],
     }, headers)
     return status, amount
 

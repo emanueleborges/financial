@@ -32,8 +32,9 @@ Backend de fintech que processa transferências P2P em tempo real, com consistê
 
 ### C3 — Transferência P2P
 - Transferir entre contas ACTIVE
+- Exigir a senha do pagador autenticado (BR-016) antes de debitar
 - Respeitar limite diário (default R$ 5.000)
-- Idempotência por chave
+- Idempotência por chave (a senha continua obrigatória na repetição)
 - Timeout transacional 30s
 - Publicar eventos Kafka
 

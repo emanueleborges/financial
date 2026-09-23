@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Financial Hub",
+    "slug": "financial-hub",
+    "scheme": "financialhub",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#07131f",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Usar Face ID para entrar no Financial Hub após o cadastro da conta.",
+        "NSCameraUsageDescription": "Tirar a foto do rosto para cadastrar o reconhecimento facial desta conta."
+      }
+    },
+    "android": {
+      "usesCleartextTraffic": true,
+      "adaptiveIcon": {
+        "backgroundColor": "#06141B"
+      },
+      "permissions": ["USE_BIOMETRIC", "USE_FINGERPRINT", "CAMERA"]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Tirar a foto do rosto para cadastrar o reconhecimento facial desta conta.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Usar Face ID para entrar no Financial Hub após o cadastro da conta."
+        }
+      ]
+    ]
+  }
+}

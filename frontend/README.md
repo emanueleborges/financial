@@ -12,6 +12,7 @@ docker compose up --build -d
 |----|-------|----------------|
 | Angular (UI da vaga) | [`angular/`](angular/) | http://localhost:4200 |
 | Next.js / React | [`next/`](next/) | http://localhost:3000 |
+| Mobile Expo | [`mobile/`](mobile/) | Expo Go / simulador |
 
 Dev sem container (API já no Docker):
 

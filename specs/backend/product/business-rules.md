@@ -76,6 +76,13 @@ COMPLETED → REVERSED (via estorno)
 - Persistência: Mongo (`favorites`); testes usam store in-memory
 - Não altera saldo
 
+## BR-016 — Senha obrigatória na transferência
+- `POST /transactions` exige `password` do pagador autenticado
+- Conferida com BCrypt (`password_hash`) **antes** do débito e **antes** do retorno idempotente
+- Ausente ou em branco → `VALIDATION_ERROR` (400)
+- Não confere → `INVALID_CREDENTIALS` (401), sem movimentar saldo
+- A senha não é persistida, auditada, publicada em evento nem devolvida na resposta
+
 ## Matriz de status HTTP
 
 | Código domínio | HTTP |

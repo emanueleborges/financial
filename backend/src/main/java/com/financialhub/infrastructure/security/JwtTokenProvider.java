@@ -80,6 +80,12 @@ public class JwtTokenProvider implements TokenProviderPort {
     }
 
     @Override
+    public String extractType(String token) {
+        String type = parseClaims(token).get("type", String.class);
+        return type == null ? "access" : type;
+    }
+
+    @Override
     public long getAccessTokenExpirationMs() {
         return accessExpirationMs;
     }

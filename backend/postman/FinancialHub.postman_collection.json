@@ -39,6 +39,18 @@
             },
             "url": "{{baseUrl}}/api/v1/auth/login"
           }
+        },
+        {
+          "name": "Refresh",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/auth/refresh"
+          }
         }
       ]
     },
@@ -186,7 +198,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"payerDocument\": \"{{document1}}\",\n  \"payeeDocument\": \"{{document2}}\",\n  \"amount\": 150.00\n}"
+              "raw": "{\n  \"payerDocument\": \"{{document1}}\",\n  \"payeeDocument\": \"{{document2}}\",\n  \"amount\": 150.00,\n  \"password\": \"senha123\"\n}"
             },
             "url": "{{baseUrl}}/api/v1/transactions"
           }

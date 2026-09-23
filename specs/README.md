@@ -45,6 +45,7 @@ specs/
 |------|---------|
 | Visão geral (Angular + Next.js) | [`frontend/overview.md`](frontend/overview.md) |
 | Angular (UI da vaga) | [`frontend/angular.md`](frontend/angular.md) |
+| Mobile (Expo + biometria) | [`frontend/mobile.md`](frontend/mobile.md) |
 
 ## Infra (local)
 

@@ -1,7 +1,12 @@
 package com.financialhub.application.service;
 
 import com.financialhub.application.port.in.TransferUseCase;
-import com.financialhub.application.port.out.*;
+import com.financialhub.application.port.out.AuditRepositoryPort;
+import com.financialhub.application.port.out.BalanceCachePort;
+import com.financialhub.application.port.out.PasswordEncoderPort;
+import com.financialhub.application.port.out.TransactionEventPublisherPort;
+import com.financialhub.application.port.out.TransactionRepositoryPort;
+import com.financialhub.application.port.out.UserRepositoryPort;
 import com.financialhub.domain.exception.*;
 import com.financialhub.domain.model.Transaction;
 import com.financialhub.domain.model.TransactionAudit;
@@ -23,6 +28,7 @@ import java.util.UUID;
 public class TransferService implements TransferUseCase {
 
     private final UserRepositoryPort userRepository;
+    private final PasswordEncoderPort passwordEncoder;
     private final TransactionRepositoryPort transactionRepository;
     private final AuditRepositoryPort auditRepository;
     private final TransactionEventPublisherPort eventPublisher;
@@ -49,6 +55,10 @@ public class TransferService implements TransferUseCase {
             throw new InvalidTransactionException("CPF/CNPJ inválido");
         }
 
+        User payer = userRepository.findByDocument(payerDoc)
+                .orElseThrow(() -> new UserNotFoundException("documento " + payerDoc));
+        verifyPassword(command.password(), payer);
+
         if (command.idempotencyKey() != null && !command.idempotencyKey().isBlank()) {
             var existing = transactionRepository.findByIdempotencyKey(command.idempotencyKey());
             if (existing.isPresent()) {
@@ -57,8 +67,6 @@ public class TransferService implements TransferUseCase {
             }
         }
 
-        User payer = userRepository.findByDocument(payerDoc)
-                .orElseThrow(() -> new UserNotFoundException("documento " + payerDoc));
         User payee = userRepository.findByDocument(payeeDoc)
                 .orElseThrow(() -> new UserNotFoundException("documento " + payeeDoc));
 
@@ -118,6 +126,13 @@ public class TransferService implements TransferUseCase {
             }
             throw new DomainException("TRANSFER_FAILED",
                     "Falha ao processar transferência: " + ex.getMessage());
+        }
+    }
+
+    private void verifyPassword(String rawPassword, User payer) {
+        if (rawPassword == null || rawPassword.isBlank()
+                || !passwordEncoder.matches(rawPassword, payer.getPasswordHash())) {
+            throw new DomainException("INVALID_CREDENTIALS", "Senha inválida");
         }
     }
 

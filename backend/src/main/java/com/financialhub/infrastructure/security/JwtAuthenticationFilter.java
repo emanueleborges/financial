@@ -32,6 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             if (tokenProvider.isValid(token)
+                    && "access".equals(tokenProvider.extractType(token))
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
                 AuthenticatedUser principal = new AuthenticatedUser(
                         tokenProvider.extractUserId(token),

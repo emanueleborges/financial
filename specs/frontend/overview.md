@@ -2,7 +2,8 @@
 
 **Status:** active  
 **UI da vaga:** Angular 19 (`frontend/angular/`) — [`angular.md`](angular.md)  
-**Alternativa:** Next.js 15 (`frontend/next/`)  
+**Alternativa web:** Next.js 15 (`frontend/next/`)  
+**Mobile:** React Native / Expo (`frontend/mobile/`) — [`mobile.md`](mobile.md)  
 **API:** `specs/backend/api/rest-v1.md` → código `backend/`  
 **Notificações:** `specs/backend/services/notification.md` → `services/notification-service/`
 
@@ -16,6 +17,7 @@ Há **duas UIs** com o mesmo contrato de telas. A vaga pede Angular; Next.js per
 |----|-------|-------|------|
 | Angular (canônica para a vaga) | `frontend/angular/` | `:4200` | [`angular.md`](angular.md) |
 | Next.js (alternativa) | `frontend/next/` | `:3000` | este arquivo (escopo v1) |
+| Mobile Expo | `frontend/mobile/` | Expo Go / simulador | [`mobile.md`](mobile.md) |
 
 ## Identidade
 
@@ -39,7 +41,7 @@ A UI **não** usa UUID de usuário.
 | Cadastro | `/register` | público | criar usuário |
 | Login | `/login` | público | JWT por **CPF/CNPJ** |
 | Home / saldo | `/app` | JWT | saldo do documento logado |
-| Transferir | `/app/transfer` | JWT | favoritos ou novo CPF/CNPJ; identificar recebedor antes de confirmar |
+| Transferir | `/app/transfer` | JWT | favoritos ou novo CPF/CNPJ; identificar recebedor; senha da conta obrigatória para confirmar |
 | Transações / Extrato | `/app/transactions` | JWT | extrato com saldos + exportar PDF + estorno + favoritar + comprovante |
 
 ## Favoritos
@@ -54,7 +56,7 @@ A UI **não** usa UUID de usuário.
 - Paginação avançada / filtros complexos
 - Busca de usuário por e-mail
 - Refresh token automático em background
-- PWA / mobile nativo
+- PWA (o app nativo está em [`mobile.md`](mobile.md))
 - Admin / multi-tenancy
 
 ## Contrato com o backend
@@ -86,7 +88,7 @@ notification-service deve permitir `http://localhost:4200`.
 2. Token persistido; rotas `/app/*` protegidas
 3. Nenhum fluxo de usuário depende de UUID de conta
 4. Transferência identifica o recebedor (nome) ou bloqueia se CPF/CNPJ não existir
-5. Transferência permite selecionar favorito ou incluir novo CPF/CNPJ
+5. Transferência permite selecionar favorito ou incluir novo CPF/CNPJ e só confirma com a senha da conta logada
 6. Transações permitem favoritar CPF/CNPJ da contraparte
 7. Cada transação permite exportar comprovante em PDF
 8. Erros `VALIDATION_ERROR` com `fields` no campo correspondente

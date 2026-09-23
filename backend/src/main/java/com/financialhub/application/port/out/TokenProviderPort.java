@@ -16,5 +16,7 @@ public interface TokenProviderPort {
 
     boolean isValid(String token);
 
+    String extractType(String token);
+
     long getAccessTokenExpirationMs();
 }

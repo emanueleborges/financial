@@ -5,6 +5,7 @@ import com.financialhub.application.service.TransactionStatusService;
 import com.financialhub.application.service.TransferService;
 import com.financialhub.domain.enums.UserStatus;
 import com.financialhub.domain.exception.DailyLimitExceededException;
+import com.financialhub.domain.exception.DomainException;
 import com.financialhub.domain.exception.InvalidTransactionException;
 import com.financialhub.domain.model.Transaction;
 import com.financialhub.domain.model.User;
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.*;
 class TransferServiceTest {
 
     @Mock private UserRepositoryPort userRepository;
+    @Mock private PasswordEncoderPort passwordEncoder;
     @Mock private TransactionRepositoryPort transactionRepository;
     @Mock private AuditRepositoryPort auditRepository;
     @Mock private TransactionEventPublisherPort eventPublisher;
@@ -69,13 +71,14 @@ class TransferServiceTest {
 
         when(userRepository.findByDocument(PAYER_DOC)).thenReturn(Optional.of(payer));
         when(userRepository.findByDocument(PAYEE_DOC)).thenReturn(Optional.of(payee));
+        when(passwordEncoder.matches("senha123", "hash")).thenReturn(true);
         when(userRepository.getDailySpent(payerId)).thenReturn(BigDecimal.ZERO);
         when(transactionStatusService.createPending(any(), any(), any(), any())).thenReturn(pending);
         when(transactionRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
         when(objectMapper.writeValueAsString(any())).thenReturn("{}");
 
         TransferCommand cmd = new TransferCommand(
-                PAYER_DOC, PAYEE_DOC, PAYER_DOC, new BigDecimal("50.00"), null);
+                PAYER_DOC, PAYEE_DOC, PAYER_DOC, new BigDecimal("50.00"), "senha123", null);
         Transaction result = transferService.execute(cmd);
 
         assertNotNull(result);
@@ -85,7 +88,7 @@ class TransferServiceTest {
     @Test
     void shouldRejectSameDocuments() {
         TransferCommand cmd = new TransferCommand(
-                PAYER_DOC, PAYER_DOC, PAYER_DOC, new BigDecimal("10.00"), null);
+                PAYER_DOC, PAYER_DOC, PAYER_DOC, new BigDecimal("10.00"), "senha123", null);
         assertThrows(InvalidTransactionException.class, () -> transferService.execute(cmd));
     }
 
@@ -95,11 +98,12 @@ class TransferServiceTest {
         User payee = user(payeeId, PAYEE_DOC, new BigDecimal("0.00"));
 
         when(userRepository.findByDocument(PAYER_DOC)).thenReturn(Optional.of(payer));
+        when(passwordEncoder.matches("senha123", "hash")).thenReturn(true);
         when(userRepository.findByDocument(PAYEE_DOC)).thenReturn(Optional.of(payee));
         when(userRepository.getDailySpent(payerId)).thenReturn(new BigDecimal("4900.00"));
 
         TransferCommand cmd = new TransferCommand(
-                PAYER_DOC, PAYEE_DOC, PAYER_DOC, new BigDecimal("200.00"), null);
+                PAYER_DOC, PAYEE_DOC, PAYER_DOC, new BigDecimal("200.00"), "senha123", null);
         assertThrows(DailyLimitExceededException.class, () -> transferService.execute(cmd));
     }
 
@@ -117,13 +121,31 @@ class TransferServiceTest {
                 .updatedAt(Instant.now())
                 .build();
 
+        when(userRepository.findByDocument(PAYER_DOC)).thenReturn(Optional.of(
+                user(payerId, PAYER_DOC, new BigDecimal("1000.00"))));
+        when(passwordEncoder.matches("senha123", "hash")).thenReturn(true);
         when(transactionRepository.findByIdempotencyKey("dup-key")).thenReturn(Optional.of(existing));
 
         TransferCommand cmd = new TransferCommand(
-                PAYER_DOC, PAYEE_DOC, PAYER_DOC, new BigDecimal("50.00"), "dup-key");
+                PAYER_DOC, PAYEE_DOC, PAYER_DOC, new BigDecimal("50.00"), "senha123", "dup-key");
         Transaction result = transferService.execute(cmd);
 
         assertEquals(existing.getId(), result.getId());
+        verify(userRepository, never()).transferBalance(any(), any(), any());
+    }
+
+    @Test
+    void shouldRejectWrongPasswordBeforeDebit() {
+        when(userRepository.findByDocument(PAYER_DOC)).thenReturn(Optional.of(
+                user(payerId, PAYER_DOC, new BigDecimal("1000.00"))));
+        when(passwordEncoder.matches("errada1", "hash")).thenReturn(false);
+
+        TransferCommand cmd = new TransferCommand(
+                PAYER_DOC, PAYEE_DOC, PAYER_DOC, new BigDecimal("50.00"), "errada1", "dup-key");
+
+        DomainException ex = assertThrows(DomainException.class, () -> transferService.execute(cmd));
+        assertEquals("INVALID_CREDENTIALS", ex.getCode());
+        verify(transactionRepository, never()).findByIdempotencyKey(any());
         verify(userRepository, never()).transferBalance(any(), any(), any());
     }
 

@@ -149,6 +149,7 @@ export function transfer(
     payerDocument: string;
     payeeDocument: string;
     amount: number;
+    password: string;
   },
   token: string,
   idempotencyKey: string

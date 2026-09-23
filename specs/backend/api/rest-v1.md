@@ -39,6 +39,27 @@ JWT access:
 - `sub`: documento
 - `userId`: UUID interno
 - `email`: e-mail
+- `type`: `access` | `refresh`
+
+### POST `/auth/refresh` — público
+Renova a sessão com o `refreshToken` emitido no login. **Não** recebe senha nem biometria.
+
+```json
+// request
+{ "refreshToken": "..." }
+
+// 200 — mesmo envelope do login
+{
+  "accessToken": "...",
+  "refreshToken": "...",
+  "tokenType": "Bearer",
+  "expiresIn": 3600
+}
+```
+
+- **401** token inválido, expirado ou `type` ≠ `refresh`
+
+A biometria (Face ID / digital) vive **só no dispositivo**. O servidor nunca recebe template, imagem ou hash biométrico. O app mobile usa a biometria local para liberar o `refreshToken` guardado no cofre do SO e chama este endpoint.
 
 ## Users
 
@@ -133,11 +154,17 @@ Lista favoritos do documento (Mongo; fallback in-memory em testes).
   "payerDocument": "52998224725",
   "payeeDocument": "39053344705",
   "amount": 150.00,
+  "password": "senha123",
   "idempotencyKey": "transfer-001"
 }
 ```
+- `password` é obrigatório (6 a 100 caracteres): senha da conta do pagador (BR-016)
+- Conferida com BCrypt antes do débito e antes de devolver transação idempotente
 - `payerDocument` deve coincidir com o documento do JWT
+- A senha não entra em auditoria, evento, comprovante nem na resposta
 - **201** `TransactionResponse`
+- **400** se `password` ausente ou inválida no formato
+- **401** `INVALID_CREDENTIALS` se a senha não conferir (saldo intacto)
 - **403** se `payerDocument` ≠ documento autenticado
 - **422** regras de negócio
 - **404** pagador/recebedor não encontrado

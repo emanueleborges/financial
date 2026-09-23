@@ -3,6 +3,7 @@ package com.financialhub.interfaces.rest.controller;
 import com.financialhub.application.port.in.AuthenticateUseCase;
 import com.financialhub.interfaces.rest.dto.AuthResponse;
 import com.financialhub.interfaces.rest.dto.LoginRequest;
+import com.financialhub.interfaces.rest.dto.RefreshRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -27,6 +28,18 @@ public class AuthController {
         var result = authenticateUseCase.execute(
                 new AuthenticateUseCase.AuthCommand(request.document(), request.password())
         );
+        return ResponseEntity.ok(new AuthResponse(
+                result.accessToken(),
+                result.refreshToken(),
+                result.tokenType(),
+                result.expiresIn()
+        ));
+    }
+
+    @PostMapping("/refresh")
+    @Operation(summary = "Renova JWT com refresh token (sem senha; usado pelo login biométrico no app)")
+    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshRequest request) {
+        var result = authenticateUseCase.refresh(request.refreshToken());
         return ResponseEntity.ok(new AuthResponse(
                 result.accessToken(),
                 result.refreshToken(),

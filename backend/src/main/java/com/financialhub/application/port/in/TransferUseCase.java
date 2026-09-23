@@ -13,6 +13,16 @@ public interface TransferUseCase {
             String payeeDocument,
             String requesterDocument,
             BigDecimal amount,
+            String password,
             String idempotencyKey
-    ) {}
+    ) {
+        @Override
+        public String toString() {
+            return "TransferCommand[payerDocument=" + payerDocument
+                    + ", payeeDocument=" + payeeDocument
+                    + ", requesterDocument=" + requesterDocument
+                    + ", amount=" + amount
+                    + ", password=***, idempotencyKey=" + idempotencyKey + "]";
+        }
+    }
 }

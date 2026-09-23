@@ -56,6 +56,7 @@ export default function TransferPage() {
   const [payeeDocument, setPayeeDocument] = useState("");
   const [amountMasked, setAmountMasked] = useState("");
   const [amountValue, setAmountValue] = useState<number | null>(null);
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<unknown>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [result, setResult] = useState<TransactionResponse | null>(null);
@@ -181,6 +182,9 @@ export default function TransferPage() {
     if (amount == null || amount <= 0) {
       local.amount = "Valor deve ser maior que zero";
     }
+    if (password.length < 6) {
+      local.password = "Senha deve ter entre 6 e 100 caracteres";
+    }
 
     setFieldErrors(local);
     if (Object.keys(local).length > 0) {
@@ -203,6 +207,7 @@ export default function TransferPage() {
           payerDocument: session.document,
           payeeDocument: digits,
           amount: amount as number,
+          password,
         },
         session.token,
         crypto.randomUUID()
@@ -210,6 +215,7 @@ export default function TransferPage() {
       setResult(tx);
       setAmountMasked("");
       setAmountValue(null);
+      setPassword("");
       setFieldErrors({});
     } catch (err) {
       setError(err);
@@ -244,7 +250,7 @@ export default function TransferPage() {
           Transferir
         </h1>
         <p className="mt-2 text-sm text-white/55">
-          Selecione um CPF/CNPJ favorito ou informe um novo. Limite diário: R$ 5.000,00.
+          Selecione um CPF/CNPJ favorito ou informe um novo. A senha da conta confirma a transferência. Limite diário: R$ 5.000,00.
         </p>
       </div>
 
@@ -382,6 +388,26 @@ export default function TransferPage() {
                 return next;
               });
             }}
+          />
+        </Field>
+        <Field label="Senha da conta" error={fieldErrors.password}>
+          <input
+            className={fieldErrors.password ? inputErrorClass : inputClass}
+            type="password"
+            required
+            minLength={6}
+            maxLength={100}
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setFieldErrors((prev) => {
+                const next = { ...prev };
+                delete next.password;
+                return next;
+              });
+            }}
+            aria-invalid={Boolean(fieldErrors.password)}
           />
         </Field>
         <FormError error={error} onDismiss={() => setError(null)} />
