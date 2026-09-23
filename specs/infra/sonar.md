@@ -44,7 +44,7 @@ Secrets / variables no repositório:
 
 Sem `SONAR_TOKEN`, o job **não falha o CI**: registra aviso e sai. Com token, o scan falha o job se o scanner falhar. Quality Gate no Actions é informativo (`continue-on-error`) até a baseline estabilizar.
 
-Setup único no SonarCloud: importar o repo GitHub; `sonar.projectKey` deve coincidir com a chave do projeto (padrão `emanueleborges_financial`).
+Setup único no SonarCloud: importar o repo GitHub; `sonar.projectKey` deve coincidir com a chave do projeto (padrão `emanuelborges_financial`, organização `emanuelborges`).
 
 ## O que não entra
 
