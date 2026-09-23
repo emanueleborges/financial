@@ -25,8 +25,8 @@
         <resilience4j.version>2.2.0</resilience4j.version>
         <bucket4j.version>8.10.1</bucket4j.version>
         <testcontainers.version>1.21.4</testcontainers.version>
-        <sonar.organization>emanuelborges</sonar.organization>
-        <sonar.projectKey>emanuelborges_financial</sonar.projectKey>
+        <sonar.organization>emanueleborges</sonar.organization>
+        <sonar.projectKey>emanueleborges_financial-hub</sonar.projectKey>
         <sonar.projectName>Financial Hub</sonar.projectName>
         <sonar.projectVersion>1.0.0-SNAPSHOT</sonar.projectVersion>
         <sonar.projectDescription>Plataforma de Pagamentos Instantâneos P2P</sonar.projectDescription>

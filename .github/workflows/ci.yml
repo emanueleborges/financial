@@ -95,7 +95,7 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5
         with:
           args: >
-            -Dsonar.projectKey=emanuelborges_financial
+            -Dsonar.projectKey=emanueleborges_financial-hub
             -Dsonar.organization=emanueleborges
       - name: Quality Gate
         if: env.SONAR_TOKEN != ''
