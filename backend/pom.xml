@@ -25,6 +25,16 @@
         <resilience4j.version>2.2.0</resilience4j.version>
         <bucket4j.version>8.10.1</bucket4j.version>
         <testcontainers.version>1.21.4</testcontainers.version>
+        <sonar.organization>emanuelborges</sonar.organization>
+        <sonar.projectKey>financial-hub</sonar.projectKey>
+        <sonar.projectName>financial-hub</sonar.projectName>
+        <sonar.projectVersion>1.0.0-SNAPSHOT</sonar.projectVersion>
+        <sonar.projectDescription>Plataforma de Pagamentos Instantâneos P2P</sonar.projectDescription>
+        <sonar.projectTags>java,spring-boot,mongodb,redis,jwt,aws,s3,resilience4j,bucket4j,pdf,micrometer,prometheus,logging,json,lombok,test,kafka,testcontainers,h2</sonar.projectTags>
+        <sonar.projectWebsite>https://github.com/emanuelborges/financial-hub</sonar.projectWebsite>
+        <sonar.projectLicense>MIT</sonar.projectLicense>
+        <sonar.projectOrganization>emanuelborges</sonar.projectOrganization>
+        <sonar.projectOrganizationUrl>https://github.com/emanuelborges</sonar.projectOrganizationUrl>
     </properties>
 
     <dependencies>
