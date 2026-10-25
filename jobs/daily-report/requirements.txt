@@ -1,2 +1,4 @@
 kafka-python==2.0.2
 boto3==1.34.162
+# Mínimo por causa do incidente eMudhra/emSign (out/2026): versões anteriores confiam em CAs comprometidas.
+certifi>=2026.10.19
