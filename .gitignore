@@ -13,3 +13,6 @@ crash.log
 .scannerwork/
 .sonar-local-token
 target/
+
+# Secret real do Kubernetes (use backend/k8s/secret.example.yml como modelo)
+backend/k8s/secret.yml
