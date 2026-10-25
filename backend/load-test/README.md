@@ -37,3 +37,23 @@ python3 load_test.py kafka --event-type transaction.failed --topic transaction.f
 ## Observação
 
 A carga Kafka é sintética e não altera o ledger. Para medir a transferência financeira real, use `seed` seguido de `traffic`. Durante o teste, acompanhe `/actuator/prometheus`, Prometheus/Grafana e Zipkin conforme `specs/infra/observability.md`.
+
+## Latência e vazão das transferências
+
+`medir_transferencias.py` cria usuários, faz login uma vez por usuário e mede só o `POST /api/v1/transactions` (JWT, conferência de senha com BCrypt, lock pessimista e evento no Kafka), em vários níveis de concorrência:
+
+```bash
+python3 medir_transferencias.py --base http://localhost:8080 --usuarios 100 --pedidos 2000 --concorrencias 1,4,8
+```
+
+O limite de 100 pedidos/min por IP barra o teste: suba a API com `APP_RATELIMIT_REQUESTSPERMINUTE=1000000`.
+
+Resultado em 25/10/2026 (Docker Compose num MacBook, 10 CPUs, 8 GB para o Docker; 4.300 transferências, 100% com sucesso):
+
+| Em paralelo | Vazão | p50 | p95 | p99 |
+|---|---|---|---|---|
+| 1 | 14/s | 66 ms | 85 ms | 130 ms |
+| 4 | 53/s | 74 ms | 85 ms | 104 ms |
+| 8 | 81/s | 96 ms | 126 ms | 158 ms |
+
+**Limite conhecido:** cada transferência usa duas conexões ao mesmo tempo (a transação de `TransferService.execute` e a `REQUIRES_NEW` de `TransactionStatusService.createPending`). Com o pool de 20 conexões, a partir de ~10 transferências simultâneas as conexões se esgotam e os pedidos esperam o timeout de 30 s. A correção é criar a transação `PENDING` fora da transação principal.
