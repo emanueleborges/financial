@@ -7,7 +7,9 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "processed_events")
+// Idempotência por evento e consumer: o mesmo evento é processado uma vez por cada consumer.
+@Table(name = "processed_events",
+        uniqueConstraints = @UniqueConstraint(name = "idx_processed_events_unique", columnNames = {"event_id", "consumer_name"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,7 +20,7 @@ public class ProcessedEventEntity {
     @Id
     private UUID id;
 
-    @Column(name = "event_id", nullable = false, unique = true, length = 100)
+    @Column(name = "event_id", nullable = false, length = 100)
     private String eventId;
 
     @Column(name = "transaction_id", nullable = false)
