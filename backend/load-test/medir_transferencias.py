@@ -3,6 +3,7 @@
 
 Cria N usuários (CPF válido, saldo alto), faz login uma vez por usuário e dispara transferências
 concorrentes com Idempotency-Key única. Mede só a transferência (o login fica fora da conta).
+Cada rodada sai como uma linha JSON na saída padrão (para guardar: python3 medir_transferencias.py … > resultado.jsonl).
 """
 import argparse, json, statistics, time, urllib.error, urllib.request, uuid
 from concurrent.futures import ThreadPoolExecutor
@@ -75,21 +76,16 @@ def main():
     a.add_argument("--pedidos", type=int, default=2000)
     a.add_argument("--concorrencias", default="1,16,32")
     a.add_argument("--aquecimento", type=int, default=300)
-    a.add_argument("--saida")
     args = a.parse_args()
     prefixo = 300_000_000 + int(time.time()) % 100_000 * 1000
     with ThreadPoolExecutor(max_workers=8) as ex:
         usuarios = list(ex.map(lambda i: criar(args.base, i, prefixo), range(args.usuarios)))
     print(f"usuários prontos: {len(usuarios)}")
     rodada(args.base, usuarios, args.aquecimento, 16)  # aquece JIT, pools e cache
-    resultados = []
     for conc in map(int, args.concorrencias.split(",")):
         total = args.pedidos if conc > 1 else min(args.pedidos, 300)
         r = rodada(args.base, usuarios, total, conc)
         print(json.dumps(r, ensure_ascii=False))
-        resultados.append(r)
-    if args.saida:
-        json.dump(resultados, open(args.saida, "w"), indent=2, ensure_ascii=False)
 
 
 if __name__ == "__main__":
