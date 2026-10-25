@@ -164,11 +164,17 @@ Consumidores com idempotência (`processed_events`) e DLQ.
 
 ## Kubernetes
 
+O Secret não fica no repositório: crie o seu a partir do modelo, com senhas e um `JWT_SECRET` próprios.
+
 ```bash
-kubectl apply -f k8s/
+cp k8s/secret.example.yml k8s/secret.yml   # edite os valores; o arquivo é ignorado pelo git
+kubectl apply -f k8s/secret.yml
+kubectl apply -f k8s/configmap.yml -f k8s/deployment.yml -f k8s/service.yml -f k8s/hpa.yml -f k8s/ingress.yml
 ```
 
-Inclui: Deployment (3 réplicas), Service LoadBalancer, ConfigMap, Secret, HPA (CPU/memória), Ingress.
+Inclui: Deployment (3 réplicas), Service LoadBalancer, ConfigMap, Secret (modelo), HPA (CPU/memória), Ingress.
+
+Os valores padrão de `JWT_SECRET` no `application.yml` e no `docker-compose.yml` servem só para o ambiente local.
 
 ## Terraform (AWS)
 
